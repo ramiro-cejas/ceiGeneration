@@ -1,5 +1,5 @@
 .CODE
-PUSH Method_main@A # We put main method's tag at the top of the stack
+PUSH Method_main@B # We put main method's tag at the top of the stack
 CALL # We jump to main method
 HALT # End of program.
 malloc: LOADFP
@@ -18,20 +18,107 @@ RET 1
 .DATA
 str_empty: DW 0
 .DATA
-VT@A: NOP # This class doesnt have any dynamic methods
+VT@A: DW Method_method1@A,Method_method2@A,Method_method3@A
 .CODE
-Method_main@A: LOADFP # We store the dynamic link
+Method_method1@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-POP # We consume the 'this' reference from the 'chainee' that's on top of the stack, since we won't use it
-PUSH 4
-PUSH Method_main@A # We push the static method's tag to the top of the stack
+RMEM 2 # We reserve space for the arguments
+LOAD 1 # We load the parameter b to the top of the stack
+LOAD 0 # We load the parameter a to the top of the stack
+STOREFP # We point FP to caller's AR
+RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+Method_method2@A: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 2 # We reserve space for the arguments
+LOAD 1 # We load the parameter b to the top of the stack
+LOAD 0 # We load the parameter a to the top of the stack
+STOREFP # We point FP to caller's AR
+RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+Method_method3@A: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 2 # We reserve space for the arguments
+LOAD 1 # We load the parameter b to the top of the stack
+LOAD 0 # We load the parameter a to the top of the stack
+STOREFP # We point FP to caller's AR
+RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+Method_methodToPrintAndTest@A: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 2 # We reserve space for the arguments
+LOAD 1 # We load the parameter b to the top of the stack
+LOAD 0 # We load the parameter a to the top of the stack
+PUSH 3
+PUSH Method_printI@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
 STOREFP # We point FP to caller's AR
-RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+RET 2 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 Constructor@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
+STOREFP # We point FP to caller's AR
+RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+.DATA
+VT@B: DW Method_method1@B,Method_method2@B,Method_method3@B
+.CODE
+Method_method1@B: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 2 # We reserve space for the arguments
+LOAD 1 # We load the parameter b to the top of the stack
+LOAD 0 # We load the parameter a to the top of the stack
+STOREFP # We point FP to caller's AR
+RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+Method_method2@B: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 2 # We reserve space for the arguments
+LOAD 1 # We load the parameter b to the top of the stack
+LOAD 0 # We load the parameter a to the top of the stack
+STOREFP # We point FP to caller's AR
+RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+Method_method3@B: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 2 # We reserve space for the arguments
+LOAD 1 # We load the parameter b to the top of the stack
+LOAD 0 # We load the parameter a to the top of the stack
+STOREFP # We point FP to caller's AR
+RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+Method_main@B: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
+PUSH 4
+PUSH 5
+PUSH Method_methodToPrintAndTest@A # We push the static method's tag to the top of the stack
+CALL # We make the call.
+STOREFP # We point FP to caller's AR
+RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+Constructor@B: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
+STOREFP # We point FP to caller's AR
+RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+.DATA
+VT@C: DW Method_method1@B,Method_method2@B,Method_method3@B,Method_method4@C
+.CODE
+Method_method4@C: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 2 # We reserve space for the arguments
+LOAD 1 # We load the parameter b to the top of the stack
+LOAD 0 # We load the parameter a to the top of the stack
+STOREFP # We point FP to caller's AR
+RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+Constructor@C: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 .DATA
@@ -40,11 +127,14 @@ VT@Object: NOP # This class doesnt have any dynamic methods
 Method_debugPrint@Object: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 1 # We reserve space for the arguments
+LOAD 0 # We load the parameter i to the top of the stack
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 Constructor@Object: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 .DATA
@@ -53,6 +143,7 @@ VT@String: NOP # This class doesnt have any dynamic methods
 Constructor@String: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
 LOAD 3
 PUSH str_empty # We put the empty String tag at the top of the stack
 STOREREF 1 # We link the 'fake attribute' to the empty string tag (attribute is hardcoded)
@@ -64,6 +155,8 @@ VT@System: NOP # This class doesnt have any dynamic methods
 Method_printC@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 1 # We reserve space for the arguments
+LOAD 0 # We load the parameter c to the top of the stack
 LOAD 3 # We put the parameter i at the top of the stack (offset is hard-coded)
 CPRINT # We print the char we just loaded
 STOREFP # We point FP to caller's AR
@@ -71,6 +164,8 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Method_printS@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 1 # We reserve space for the arguments
+LOAD 0 # We load the parameter s to the top of the stack
 LOAD 3 # We put the parameter i at the top of the stack (offset is hard-coded)
 LOADREF 1 # We load the 'fake attribute' through the this reference and the offset (hardcoded)
 SPRINT # We print the string we just loaded
@@ -79,12 +174,15 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Method_println@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
 PRNLN # We print the carriage return
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 Method_printCln@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 1 # We reserve space for the arguments
+LOAD 0 # We load the parameter c to the top of the stack
 LOAD 3 # We put the parameter i at the top of the stack (offset is hard-coded)
 CPRINT # We print the char we just loaded
 PRNLN # We print the carriage return
@@ -93,6 +191,8 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Method_printSln@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 1 # We reserve space for the arguments
+LOAD 0 # We load the parameter s to the top of the stack
 LOAD 3 # We put the parameter i at the top of the stack (offset is hard-coded)
 LOADREF 1 # We load the 'fake attribute' of string that has the pointer to data
 SPRINT # We print the String we just loaded
@@ -102,6 +202,7 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Method_read@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
 READ # We read the next integer value on the input stream.
 PUSH 48 # We push 48 because the integer 0 is represented by the char number 48 in the ASCII table
 SUB # We subtract that 'ASCII Offset' to get the real number
@@ -111,6 +212,8 @@ RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Method_printB@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 1 # We reserve space for the arguments
+LOAD 0 # We load the parameter b to the top of the stack
 LOAD 3 # We put the parameter i at the top of the stack (offset is hard-coded)
 BPRINT # We print the boolean we just loaded
 STOREFP # We point FP to caller's AR
@@ -118,6 +221,8 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Method_printIln@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 1 # We reserve space for the arguments
+LOAD 0 # We load the parameter i to the top of the stack
 LOAD 3 # We put the parameter i at the top of the stack (offset is hard-coded)
 IPRINT # We print the integer we just loaded
 PRNLN # We print the carriage return
@@ -126,12 +231,17 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Method_printI@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-PRNLN # We print the carriage return
+RMEM 1 # We reserve space for the arguments
+LOAD 0 # We load the parameter i to the top of the stack
+LOAD 3 # We put the parameter i at the top of the stack (offset is hard-coded)
+IPRINT # We print the integer we just loaded
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 Method_printBln@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 1 # We reserve space for the arguments
+LOAD 0 # We load the parameter b to the top of the stack
 LOAD 3 # We put the parameter i at the top of the stack (offset is hard-coded)
 BPRINT # We print the boolean we just loaded
 PRNLN # We print the carriage return
@@ -140,5 +250,6 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Constructor@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]

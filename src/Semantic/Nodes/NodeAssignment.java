@@ -77,6 +77,7 @@ public class NodeAssignment implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating assignment TODO");
         //TODO
     }
 }

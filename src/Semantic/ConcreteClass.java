@@ -111,6 +111,8 @@ public class ConcreteClass{
     }
 
     public void consolidate(ArrayList parentsList) throws SemanticException {
+        if (consolidated)
+            return;
         //if im in the list, there is a cycle then symbolTable.semExceptionHandler.show(exception
         ConcreteClass parent = null;
         if (parentsList.contains(name.getLexeme()))
@@ -140,7 +142,6 @@ public class ConcreteClass{
         checkCorrectInheritance();
         }
 
-        System.out.println("Implements Name: "+implementsName.getLexeme());
         if(implementsName.getLexeme().equals("-")){
             if (!extendsName.getLexeme().equals("$"))
                 nextMethodOffset = symbolTable.classes.get(extendsName.getLexeme()).getNextMethodOffset();
@@ -149,14 +150,16 @@ public class ConcreteClass{
             nextMethodOffset = implementedInterface.getNextMethodOffset();
         }
 
+        System.out.println("Offsets for class " + name.getLexeme() + ": ");
         for(ConcreteMethod method : methods.values()) {
             boolean isStatic = method.isStatic.getLexeme().equals("static");
             boolean isRedefined = method.isRedefined();
-            boolean isInherited = method.methodBlock.currentClass != this;
+            boolean isInherited = method.originalClass != this;
 
             boolean needsOffset = !(isStatic || isRedefined || isInherited);
 
             if(needsOffset) {
+                System.out.println("Method: " + method.name.getLexeme() + " Offset: " + nextMethodOffset);
                 method.setOffset(nextMethodOffset);
                 nextMethodOffset++;
             }
@@ -173,6 +176,7 @@ public class ConcreteClass{
             boolean needsOffset = !(isStatic || isInherited);
 
             if(needsOffset) {
+                System.out.println("Attribute: " + attribute.name.getLexeme() + " Offset: " + nextAttributeOffset);
                 attribute.setOffset(nextAttributeOffset);
                 nextAttributeOffset++;
             }
@@ -184,8 +188,7 @@ public class ConcreteClass{
     }
 
     private int getNextMethodOffset() {
-        //TODO: implement
-        return 0;
+        return nextMethodOffset;
     }
 
     private void checkCorrectInheritance() throws SemanticException {
@@ -348,7 +351,7 @@ public class ConcreteClass{
         }
 
         //if it has static attributes, we need to create a new section in the .DATA segment
-        if(staticAttributes.size() > 0)
+        if(!staticAttributes.isEmpty())
             codeGenerator.gen(".DATA");
 
         for(ConcreteAttribute attribute : staticAttributes) {

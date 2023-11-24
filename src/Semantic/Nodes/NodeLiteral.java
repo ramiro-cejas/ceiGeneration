@@ -59,6 +59,7 @@ public class NodeLiteral implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating literal");
         if (type.getLexeme().equals("int"))
             genInt(codeGenerator);
         else if (type.getLexeme().equals("char"))

@@ -60,6 +60,7 @@ public class NodeUnaryOp extends NodeExpression {
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating unary op TODO");
         //TODO
     }
 }

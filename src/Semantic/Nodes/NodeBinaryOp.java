@@ -98,6 +98,54 @@ public class NodeBinaryOp extends NodeExpression{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        //TODO
+        System.out.println("Generating binary operation " + operator.getLexeme());
+        //first generate the code for the left expression
+        leftExpression.generate(codeGenerator);
+
+        //then generate the code for the right expression
+        rightExpression.generate(codeGenerator);
+
+        //then generate the code for the operator
+        switch (operator.getLexeme()) {
+            case "+":
+                codeGenerator.gen("ADD");
+                break;
+            case "-":
+                codeGenerator.gen("SUB");
+                break;
+            case "*":
+                codeGenerator.gen("MUL");
+                break;
+            case "/":
+                codeGenerator.gen("DIV");
+                break;
+            case "%":
+                codeGenerator.gen("MOD");
+                break;
+            case "<":
+                codeGenerator.gen("LT");
+                break;
+            case ">":
+                codeGenerator.gen("GT");
+                break;
+            case "<=":
+                codeGenerator.gen("LE");
+                break;
+            case ">=":
+                codeGenerator.gen("GE");
+                break;
+            case "==":
+                codeGenerator.gen("EQ");
+                break;
+            case "!=":
+                codeGenerator.gen("NE");
+                break;
+            case "&&":
+                codeGenerator.gen("AND");
+                break;
+            case "||":
+                codeGenerator.gen("OR");
+                break;
+        }
     }
 }

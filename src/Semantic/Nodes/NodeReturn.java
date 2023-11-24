@@ -98,6 +98,7 @@ public class NodeReturn implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating return TODO");
         //TODO
     }
 }

@@ -3,6 +3,7 @@ package SecondSemantic.Semantic.Nodes;
 import SecondSemantic.Extras.CompiException;
 import SecondSemantic.Generation.CodeGenerator;
 import SecondSemantic.Lexical.Token;
+import SecondSemantic.Semantic.ConcreteAttribute;
 import SecondSemantic.Semantic.ConcreteMethod;
 import SecondSemantic.Semantic.SemanticException;
 import SecondSemantic.Semantic.SymbolTable;
@@ -12,6 +13,7 @@ public class NodeVariableStaticMethod extends NodeVariable{
     private Token className;
 
     boolean alreadyChecked = false;
+    public ConcreteMethod methodToCall;
 
     public NodeVariableStaticMethod(Token name, NodeBlock parentBlock, Token className) {
         super(name, parentBlock);
@@ -36,6 +38,7 @@ public class NodeVariableStaticMethod extends NodeVariable{
                         }
                     }
                     type = methodToMatch.type;
+                    methodToCall = methodToMatch;
                 }
             } else {
                 symbolTable.semExceptionHandler.show(new SemanticException(name,"Static method " + name.getLexeme() + " is not defined in class " + className.getLexeme()));
@@ -52,6 +55,22 @@ public class NodeVariableStaticMethod extends NodeVariable{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        //TODO
+        System.out.println("Generating static method TODO");
+        //si es distinto de void, reservar memoria para el return
+        if(!methodToCall.type.getName().equals("keyword_void")) {
+            String cRet = " # We reserve a memory cell for the method's return value";
+            codeGenerator.gen("RMEM 1" + cRet);
+        }
+
+        for(Node argument : parameters) {
+            argument.generate(codeGenerator);
+        }
+
+        String tag = methodToCall.getTag();
+        String cTag = " # We push the static method's tag to the top of the stack";
+        codeGenerator.gen("PUSH " + tag + cTag);
+
+        String cCall = " # We make the call.";
+        codeGenerator.gen("CALL" + cCall);
     }
 }

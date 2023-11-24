@@ -39,6 +39,7 @@ public class NodeVariableThis extends NodeVariable{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating this TODO");
         //TODO
     }
 }

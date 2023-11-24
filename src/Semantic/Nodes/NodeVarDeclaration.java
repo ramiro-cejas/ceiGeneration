@@ -66,6 +66,7 @@ public class NodeVarDeclaration implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating var declaration TODO");
         //TODO
     }
 }

@@ -50,6 +50,7 @@ public class NodeWhile implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating while TODO");
         //TODO
     }
 }

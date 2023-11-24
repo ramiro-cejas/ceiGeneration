@@ -88,6 +88,13 @@ public class ConcreteMethod {
         String c3 = " # We signal the AR being built as the current AR";
         codeGenerator.gen("STOREFP" + c3);
 
+        //first we reserve space for the arguments
+        codeGenerator.gen("RMEM " + parameters.size() + " # We reserve space for the arguments");
+        //here we will retrieve the parameters from the stack in reverse order
+        for (int i = parametersInOrder.size() - 1; i >= 0; i--) {
+            codeGenerator.gen("LOAD " + i + " # We load the parameter " + parametersInOrder.get(i).name.getLexeme() + " to the top of the stack");
+        }
+
         methodBlock.generate(codeGenerator);
 
         String c4 = " # We point FP to caller's AR";

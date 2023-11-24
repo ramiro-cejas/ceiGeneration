@@ -197,7 +197,7 @@ public class NodeVariable implements Node{
     }
 
     protected void generateStaticAttr(CodeGenerator codeGenerator) throws CompiException {
-
+        System.out.println("Generating static attribute access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
         boolean readAccess = inTheLastIsMethod() || childChain != null;
         ConcreteAttribute attribute = referencedVariable;
         String tag = TagHandler.getAttributeTag(attribute, parentBlock.currentClass);
@@ -218,10 +218,12 @@ public class NodeVariable implements Node{
     }
 
     protected void generateDynamicAttr(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating dynamic attribute access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
         //if the referenced variable is a class attribute
         boolean attribute = parentBlock.classAttributes.contains(referencedVariable);
         boolean readAccess = inTheLastIsMethod() || childChain != null;
         int offset = referencedVariable.getOffset();
+        //boolean isParameter = parentBlock.methodParameters.contains(referencedVariable);
 
         if(attribute) {
             String cThis = " # Accessing a dynamic attribute, we put a reference to 'this' at the top of the stack.";
@@ -239,6 +241,7 @@ public class NodeVariable implements Node{
             }
         } else {
             if(readAccess) {
+                System.out.println("Generating read acces to local variable or parameter " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
                 String cLoad = " # We get the variable from the stack through its offset";
                 codeGenerator.gen("LOAD " + offset + cLoad);
             } else {
@@ -246,6 +249,8 @@ public class NodeVariable implements Node{
                 codeGenerator.gen("STORE " + offset + cStore);
             }
         }
+
+
     }
 
     private void generateStaticCall(CodeGenerator codeGenerator) throws CompiException {
@@ -261,7 +266,7 @@ public class NodeVariable implements Node{
             argument.generate(codeGenerator);
         }
 
-        String tag = parentBlock.currentMethod.getTag();
+        String tag = "Method_" + name.getLexeme() + "@" + methodToCall.originalClass.name.getLexeme();
         String cTag = " # We push the static method's tag to the top of the stack";
         codeGenerator.gen("PUSH " + tag + cTag);
 
@@ -291,7 +296,7 @@ public class NodeVariable implements Node{
         codeGenerator.gen("LOADREF 0" + cLoad1);
 
         String cLoad2 = " # We load the method's address through the VTable.";
-        codeGenerator.gen("LOADREF " + parentBlock.currentMethod.getOffset() + cLoad2);
+        codeGenerator.gen("LOADREF " + methodToCall.getOffset() + cLoad2);
 
         String cCall = " # We make the call.";
         codeGenerator.gen("CALL" + cCall);

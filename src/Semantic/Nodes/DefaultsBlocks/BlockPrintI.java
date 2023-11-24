@@ -15,7 +15,10 @@ public class BlockPrintI extends NodeBlock {
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        String c = " # We print the carriage return";
-        codeGenerator.gen("PRNLN" + c);
+        String c1 = " # We put the parameter i at the top of the stack (offset is hard-coded)";
+        codeGenerator.gen("LOAD 3" + c1);
+
+        String c2 = " # We print the integer we just loaded";
+        codeGenerator.gen("IPRINT" + c2);
     }
 }

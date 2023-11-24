@@ -36,11 +36,12 @@ public class ConcreteAttribute {
         this.originalClass = originalClass;
     }
 
-    public void setOffset(int nextAttributeOffset) {
-        this.offset = nextAttributeOffset;
+    public void setOffset(int newOffset) {
+        this.offset = newOffset;
     }
 
     public int getOffset() {
         return offset;
     }
+
 }

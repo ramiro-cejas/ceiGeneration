@@ -40,6 +40,7 @@ public class NodeParenthesis extends NodeVariable{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating parenthesis TODO");
         //TODO
     }
 }

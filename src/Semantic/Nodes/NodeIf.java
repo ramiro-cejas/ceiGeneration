@@ -53,6 +53,7 @@ public class NodeIf implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating if TODO");
         //TODO
     }
 }

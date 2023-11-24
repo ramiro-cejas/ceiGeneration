@@ -55,6 +55,7 @@ public class NodeVariableConstructor extends NodeVariable{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+        System.out.println("Generating constructor TODO");
         //TODO
     }
 }
