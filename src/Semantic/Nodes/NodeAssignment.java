@@ -80,4 +80,15 @@ public class NodeAssignment implements Node{
         System.out.println("Generating assignment TODO");
         //TODO
     }
+
+    @Override
+    public void assignOffsets() {
+        //TODO
+    }
+
+    @Override
+    public int getOffset() {
+        //TODO
+        return 0;
+    }
 }

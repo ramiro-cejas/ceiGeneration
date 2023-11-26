@@ -130,4 +130,5 @@ public class ConcreteMethod {
     public void setOffset(int nextMethodOffset) {
         this.offset = nextMethodOffset;
     }
+
 }

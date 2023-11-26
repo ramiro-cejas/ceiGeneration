@@ -101,4 +101,15 @@ public class NodeReturn implements Node{
         System.out.println("Generating return TODO");
         //TODO
     }
+
+    @Override
+    public void assignOffsets() {
+        //TODO
+    }
+
+    @Override
+    public int getOffset() {
+        //TODO
+        return 0;
+    }
 }

@@ -3,9 +3,6 @@ class A {
     int attributo1;
     char attributo2;
     boolean attributo3;
-    //static void main(){
-    //    debugPrint(4);
-    //}
     int method1(int a, int b){
         return a + b;
     }
@@ -14,6 +11,9 @@ class A {
     }
     boolean method3(int a, int b){
         return true;
+    }
+    void methodToCheck(){
+        System.printI(1);
     }
 
     static void methodToPrintAndTest(int a, int b){
@@ -26,7 +26,9 @@ class B {
     char attributo2;
     boolean attributo3;
     static void main(){
-        A.methodToPrintAndTest(4,5);
+        var a = new A();
+        a.methodToCheck();
+        //A.methodToPrintAndTest(4,5);
     }
     int method1(int a, int b){
         return a + b;

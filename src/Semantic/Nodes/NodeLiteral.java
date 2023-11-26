@@ -75,6 +75,17 @@ public class NodeLiteral implements Node{
         }
     }
 
+    @Override
+    public void assignOffsets() {
+        //TODO
+    }
+
+    @Override
+    public int getOffset() {
+        //TODO check if this is correct
+        return 0;
+    }
+
     private void genFloat(CodeGenerator codeGenerator) {
         //TODO: Implement this
     }

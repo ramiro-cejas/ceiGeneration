@@ -41,4 +41,15 @@ public class EmptyNode implements Node{
     public void generate(CodeGenerator codeGenerator) throws CompiException {
         //do nothing
     }
+
+    @Override
+    public void assignOffsets() {
+        //do nothing
+    }
+
+    @Override
+    public int getOffset() {
+        //do nothing
+        return 0;
+    }
 }

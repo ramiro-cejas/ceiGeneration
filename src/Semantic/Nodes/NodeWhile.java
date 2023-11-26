@@ -2,6 +2,7 @@ package SecondSemantic.Semantic.Nodes;
 
 import SecondSemantic.Extras.CompiException;
 import SecondSemantic.Generation.CodeGenerator;
+import SecondSemantic.Generation.TagHandler;
 import SecondSemantic.Lexical.Token;
 import SecondSemantic.Semantic.SemanticException;
 import SecondSemantic.Semantic.SymbolTable;
@@ -50,7 +51,28 @@ public class NodeWhile implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating while TODO");
+        System.out.println("Generating while");
+        int id = TagHandler.getSentenceID();
+        String tagIn = "while_" + id;
+        String tagOut = "out_while_" + id;
+
+        codeGenerator.gen(tagIn + ": NOP");
+        condition.generate(codeGenerator);
+        codeGenerator.gen("BF " + tagOut);
+        body.generate(codeGenerator);
+        codeGenerator.gen("JUMP " + tagIn);
+        codeGenerator.gen(tagOut + ": NOP");
+
+    }
+
+    @Override
+    public void assignOffsets() {
         //TODO
+    }
+
+    @Override
+    public int getOffset() {
+        //TODO check if this is correct
+        return 0;
     }
 }

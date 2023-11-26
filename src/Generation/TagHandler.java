@@ -8,6 +8,7 @@ import SecondSemantic.Semantic.Nodes.NodeBlock;
 
 public class TagHandler {
     static int lastTagID = 0;
+    static int sentenceID = 0;
 
     public static String getMethodTag(ConcreteMethod m) {
         String c_method = m.name.getLexeme();
@@ -44,5 +45,11 @@ public class TagHandler {
 
     public static String getMallocTag() {
         return "malloc";
+    }
+
+    public static int getSentenceID() {
+        int toReturn = sentenceID;
+        sentenceID++;
+        return toReturn;
     }
 }

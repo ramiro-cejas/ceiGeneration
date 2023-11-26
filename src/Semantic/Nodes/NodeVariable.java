@@ -196,6 +196,17 @@ public class NodeVariable implements Node{
         }
     }
 
+    @Override
+    public void assignOffsets() {
+        //TODO
+    }
+
+    @Override
+    public int getOffset() {
+        //TODO check if this is correct
+        return 0;
+    }
+
     protected void generateStaticAttr(CodeGenerator codeGenerator) throws CompiException {
         System.out.println("Generating static attribute access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
         boolean readAccess = inTheLastIsMethod() || childChain != null;

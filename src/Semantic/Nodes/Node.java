@@ -15,4 +15,8 @@ public interface Node {
     void setParentBlock(NodeBlock nodeBlock);
     public Token getToken();
     public void generate(CodeGenerator codeGenerator) throws CompiException;
+
+    void assignOffsets();
+
+    int getOffset();
 }

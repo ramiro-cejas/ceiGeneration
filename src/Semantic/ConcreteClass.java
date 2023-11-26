@@ -181,6 +181,11 @@ public class ConcreteClass{
                 nextAttributeOffset++;
             }
         }
+
+        //now we assign offset to the local variables of every method
+        for (ConcreteMethod m : methods.values()){
+            m.methodBlock.assignOffsets();
+        }
     }
 
     private int getNextAttributeOffset() {
@@ -295,6 +300,7 @@ public class ConcreteClass{
     }
 
     public void generate(CodeGenerator codeGenerator) throws CompiException {
+
         generateVT(codeGenerator);
         generateAttr(codeGenerator);
         generateMethods(codeGenerator);
@@ -377,4 +383,5 @@ public class ConcreteClass{
     private void generateConstructor(CodeGenerator codeGenerator) throws CompiException {
         constructor.generateConstructor(codeGenerator);
     }
+
 }

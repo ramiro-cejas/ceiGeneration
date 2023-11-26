@@ -18,8 +18,17 @@ RET 1
 .DATA
 str_empty: DW 0
 .DATA
-VT@A: DW Method_method1@A,Method_method2@A,Method_method3@A
+VT@A: DW Method_methodToCheck@A,Method_method1@A,Method_method2@A,Method_method3@A
 .CODE
+Method_methodToCheck@A: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+RMEM 0 # We reserve space for the arguments
+PUSH 1
+PUSH Method_printI@System # We push the static method's tag to the top of the stack
+CALL # We make the call.
+STOREFP # We point FP to caller's AR
+RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 Method_method1@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -92,10 +101,20 @@ Method_main@B: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 RMEM 0 # We reserve space for the arguments
-PUSH 4
-PUSH 5
-PUSH Method_methodToPrintAndTest@A # We push the static method's tag to the top of the stack
-CALL # We make the call.
+RMEM 1 # Reserving space for block local vars
+RMEM 1 # We reserve a memory cell to store the pointer to the constructed object
+PUSH 4 # We load malloc's parameter: the number of cells to reserve for the constructed object
+PUSH malloc # We put malloc's tag on top of the stack
+CALL # We make the call
+DUP # We duplicate malloc's return so we don't lose it on our next instr.
+PUSH VT@A # We push the VTable's tag so we can link it to the CIR.
+STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
+DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
+PUSH Constructor@A # We put the constructor's tag on top of the stack
+CALL # We make the call
+STORE -1 # We store what's on top of the pile in the stack through localvar's offset
+LOAD 0 # We get the variable from the stack through its offset
+FMEM 1 # Freeing space reserved for block local vars
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 Constructor@B: LOADFP # We store the dynamic link

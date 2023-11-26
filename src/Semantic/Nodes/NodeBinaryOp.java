@@ -148,4 +148,15 @@ public class NodeBinaryOp extends NodeExpression{
                 break;
         }
     }
+
+    @Override
+    public void assignOffsets() {
+        //TODO
+    }
+
+    @Override
+    public int getOffset() {
+        //TODO
+        return 0;
+    }
 }

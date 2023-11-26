@@ -63,4 +63,15 @@ public class NodeUnaryOp extends NodeExpression {
         System.out.println("Generating unary op TODO");
         //TODO
     }
+
+    @Override
+    public void assignOffsets() {
+        //TODO
+    }
+
+    @Override
+    public int getOffset() {
+        //TODO
+        return 0;
+    }
 }

@@ -6,6 +6,7 @@ import SecondSemantic.Lexical.Token;
 import SecondSemantic.Semantic.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NodeBlock implements Node {
 
@@ -20,6 +21,8 @@ public class NodeBlock implements Node {
     public ConcreteMethod currentMethod;
 
     private SymbolTable symbolTable;
+    private int offset = 0;
+    protected List<Variable> variableList = new ArrayList<>();
 
     public NodeBlock(Token initialToken, ConcreteClass currentClass, ConcreteMethod currentMethod, NodeBlock parentBlock) {
         this.initialToken = initialToken;
@@ -119,4 +122,28 @@ public class NodeBlock implements Node {
         }
     }
 
+    @Override
+    public void assignOffsets() {
+        if(parentBlock != null) {
+            offset = parentBlock.getOffset();
+        }
+
+        for(Variable variable : variableList) {
+            variable.setOffset(offset);
+            offset--;
+        }
+
+        for(Node s : sentences) {
+            s.assignOffsets();
+        }
+    }
+
+    @Override
+    public int getOffset() {
+        return offset;
+    }
+
+    public void addLocalVariable(Variable variable) {
+        variableList.add(variable);
+    }
 }

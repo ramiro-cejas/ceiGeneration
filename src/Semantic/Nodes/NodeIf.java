@@ -2,6 +2,7 @@ package SecondSemantic.Semantic.Nodes;
 
 import SecondSemantic.Extras.CompiException;
 import SecondSemantic.Generation.CodeGenerator;
+import SecondSemantic.Generation.TagHandler;
 import SecondSemantic.Lexical.Token;
 import SecondSemantic.Semantic.ConcreteClass;
 import SecondSemantic.Semantic.ConcreteMethod;
@@ -53,7 +54,40 @@ public class NodeIf implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating if TODO");
-        //TODO
+        System.out.println("Generating if");
+        int id = TagHandler.getSentenceID();
+
+        if (elseSentence == null){
+            String tag = "out_if_" + id;
+
+            condition.generate(codeGenerator);
+            codeGenerator.gen("BF " + tag);
+            ifSentence.generate(codeGenerator);
+            codeGenerator.gen(tag + ": NOP");
+        } else {
+            String tagOut  = "out_if_" + id;
+            String tagElse = "else_if_" + id;
+
+            condition.generate(codeGenerator);
+            codeGenerator.gen("BF " + tagElse);
+            ifSentence.generate(codeGenerator);
+            codeGenerator.gen("JUMP " + tagOut);
+            codeGenerator.gen(tagElse + ": NOP");
+            elseSentence.generate(codeGenerator);
+            codeGenerator.gen(tagOut + ": NOP");
+        }
+    }
+
+    @Override
+    public void assignOffsets() {
+        ifSentence.assignOffsets();
+        if (elseSentence != null){
+            elseSentence.assignOffsets();
+        }
+    }
+
+    @Override
+    public int getOffset() {
+        return 0;
     }
 }
