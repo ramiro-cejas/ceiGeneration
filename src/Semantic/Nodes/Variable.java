@@ -21,7 +21,7 @@ public class Variable {
         this.memberOf = memberOf;
         instanceID = classID;
         classID++;
-        offset = DEFAULT_OFFSET;
+        offset = Integer.MIN_VALUE;
     }
 
     public boolean isStatic() {

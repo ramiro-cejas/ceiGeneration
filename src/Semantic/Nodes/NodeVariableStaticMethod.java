@@ -55,7 +55,7 @@ public class NodeVariableStaticMethod extends NodeVariable{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating static method TODO");
+        System.out.println("Generating static method access");
         //si es distinto de void, reservar memoria para el return
         if(!methodToCall.type.getName().equals("keyword_void")) {
             String cRet = " # We reserve a memory cell for the method's return value";

@@ -74,6 +74,9 @@ public class NodeVarDeclaration implements Node{
         expression.generate(codeGenerator);
 
         int offset = variable.getOffset();
+
+        System.out.println("Offset of " + id.getLexeme() + " is " + offset);
+
         String c = " # We store what's on top of the pile in the stack through localvar's offset";
         codeGenerator.gen("STORE " + offset + c);
     }

@@ -32,16 +32,10 @@ public class SymbolTable {
         ConcreteClass object = new ConcreteClass(new Token("Object", "Object", -1), this);
         object.extendsName = (new Token("$","$",-1));
         addObjectMethods(object);
-        ConcreteMethod objectConstructor = new ConcreteMethod(new Token("Object", "Object", -1), new Token("Object", "Object", -1), new Token("-", "-", -1), this);
-        objectConstructor.methodBlock = new BlockObjectConstructor(object, objectConstructor);
-        object.constructor = objectConstructor;
         addClass(object);
 
         ConcreteClass system = new ConcreteClass(new Token("System", "System", -1), this);
         addSystemMethods(system);
-        ConcreteMethod systemConstructor = new ConcreteMethod(new Token("System", "System", -1), new Token("System", "System", -1), new Token("-", "-", -1), this);
-        systemConstructor.methodBlock = new BlockSystemConstructor(system, systemConstructor);
-        system.constructor = systemConstructor;
         addClass(system);
 
         ConcreteClass string = new ConcreteClass(new Token("String", "String", -1), this);
@@ -99,6 +93,10 @@ public class SymbolTable {
         method.addParameter(new ConcreteAttribute(new Token("idMetVar","s",-1), new Token("keyword_String","String",-1), new Token("-", "-", -1)));
         method.methodBlock = new BlockPrintSln(system, method);
         system.addMethod(method);
+
+        ConcreteMethod systemConstructor = new ConcreteMethod(new Token("System", "System", -1), new Token("System", "System", -1), new Token("-", "-", -1), this);
+        systemConstructor.methodBlock = new BlockSystemConstructor(system, systemConstructor);
+        system.constructor = systemConstructor;
     }
 
     private void addObjectMethods(ConcreteClass object) throws SemanticException {
@@ -107,9 +105,9 @@ public class SymbolTable {
         method.methodBlock = new NodeBlock(new Token("punctuator_{","{",-1), object, method, null);
         object.addMethod(method);
 
-        ConcreteMethod constructor = new ConcreteMethod(new Token("idMetVar", "Object", -1), new Token("idMetVar", "Object", -1), new Token("-", "-", -1), this);
-        constructor.methodBlock = new NodeBlock(new Token("punctuator_{","{",-1), object, constructor, null);
-        object.addConstructor(constructor);
+        ConcreteMethod objectConstructor = new ConcreteMethod(new Token("Object", "Object", -1), new Token("Object", "Object", -1), new Token("-", "-", -1), this);
+        objectConstructor.methodBlock = new BlockObjectConstructor(object, objectConstructor);
+        object.constructor = objectConstructor;
     }
 
     public void addClass(ConcreteClass c) throws SemanticException {

@@ -52,14 +52,19 @@ public class NodeWhile implements Node{
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
         System.out.println("Generating while");
+
         int id = TagHandler.getSentenceID();
         String tagIn = "while_" + id;
-        String tagOut = "out_while_" + id;
+        String tagOut = "end_while_" + id;
 
         codeGenerator.gen(tagIn + ": NOP");
+
         condition.generate(codeGenerator);
+
         codeGenerator.gen("BF " + tagOut);
+
         body.generate(codeGenerator);
+
         codeGenerator.gen("JUMP " + tagIn);
         codeGenerator.gen(tagOut + ": NOP");
 

@@ -16,6 +16,7 @@ public class ConcreteClass{
     Token implementsName;
     Token extendsName;
     public HashMap<String, ConcreteMethod> methods;
+    public List<ConcreteMethod> methodsInOrder = new ArrayList<>();
     public HashMap<String, ConcreteAttribute> attributes;
     public ConcreteMethod currentMethod;
     public SymbolTable symbolTable;
@@ -238,11 +239,12 @@ public class ConcreteClass{
                     hiddenAttributes.put(a.name.getLexeme(), a);
                 }
             }
+
             for (ConcreteMethod m : parent.methods.values()){
                 if (!methods.containsKey(m.name.getLexeme()))
                     methods.put(m.name.getLexeme(), m);
                 else{
-                    //check if method is overriden, if the signature is the same, same type of return and same type and order of parameters then its ok
+                    //check if method is override, if the signature is the same, same type of return and same type and order of parameters then it's ok
                     ConcreteMethod current = methods.get(m.name.getLexeme());
                     //check if method has the same static modifier
                     if (!current.isStatic.getLexeme().equals(m.isStatic.getLexeme()))
@@ -256,9 +258,45 @@ public class ConcreteClass{
                         if (!current.parametersInOrder.get(i).type.getLexeme().equals(m.parametersInOrder.get(i).type.getLexeme()))
                             symbolTable.semExceptionHandler.show(new SemanticException(current.name,"Method " + m.name.getLexeme() + " already defined in the parent class "+ parent.name.getLexeme() + " in line "+ m.name.getRow() + " (type of parameters)"));
                     }
-                    m.isRedefined = true;
+                    methods.get(m.name.getLexeme()).isRedefined = true;
                 }
             }
+
+            //first we copy the methods in order from the parent
+            methodsInOrder.addAll(parent.methodsInOrder);
+            //now we add the methods from the current class
+            //if m is redefined then we need to replace the method in the list with the new one on the same position
+            System.out.println("=============\n");
+            for (ConcreteMethod m : methods.values()){
+                if (!methodsInOrder.contains(m)) {
+                    if (!m.isStatic.getLexeme().equals("static")){
+                        if (!m.isRedefined){
+                            System.out.println("Adding method " + m.name.getLexeme() + " to the list of methods in order");
+                            methodsInOrder.add(m);
+                        } else {
+                            System.out.println("Replacing method " + m.name.getLexeme() + " in the list of methods in order");
+                            ConcreteMethod toReplace = null;
+                            for (ConcreteMethod m2 : methodsInOrder){
+                                if (m2.name.getLexeme().equals(m.name.getLexeme())){
+                                    toReplace = m2;
+                                    break;
+                                }
+                            }
+                            int index = methodsInOrder.indexOf(toReplace);
+                            methodsInOrder.remove(index);
+                            methodsInOrder.add(index, m);
+                        }
+                    }
+                }
+            }
+            System.out.println("--- Methods in order: " + methodsInOrder.size() + " for class " + name.getLexeme());
+            for (ConcreteMethod m : methodsInOrder){
+                System.out.print("Method: " + m.name.getLexeme() + " declared in the class " + m.originalClass.name.getLexeme());
+                if (m.isStatic.getLexeme().equals("static"))
+                    System.out.print(" is static");
+                System.out.println("");
+            }
+            System.out.println("=============");
         }
     }
 
@@ -300,7 +338,6 @@ public class ConcreteClass{
     }
 
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-
         generateVT(codeGenerator);
         generateAttr(codeGenerator);
         generateMethods(codeGenerator);
@@ -308,11 +345,11 @@ public class ConcreteClass{
     }
 
     private void generateVT(CodeGenerator codeGenerator) throws CompiException {
-        int numberOfMethods = methods.values().size();
+        int numberOfMethods = methodsInOrder.size();
         int numberOfDynamicMethods = 0;
         String[] tagsInOrder = new String[numberOfMethods];
 
-        for(ConcreteMethod m : methods.values()) {
+        for(ConcreteMethod m : methodsInOrder) {
             if(!m.isStatic.getLexeme().equals("static")) {
                 int offset = m.getOffset();
                 tagsInOrder[offset] = TagHandler.getMethodTag(m);
@@ -371,13 +408,23 @@ public class ConcreteClass{
     }
 
     private void generateMethods(CodeGenerator codeGenerator) throws CompiException {
-        if(methods.values().size() > 0)
+        if(methodsInOrder.size() > 0)
             codeGenerator.gen(".CODE");
 
-        for(ConcreteMethod m : methods.values()) {
+        for(ConcreteMethod m : methodsInOrder) {
             if (m.getOriginalClass() == this)
                 m.generateMethod(codeGenerator);
         }
+
+        for(ConcreteMethod m : methods.values()) {
+            if (m.getOriginalClass() == this && m.isStatic.getLexeme().equals("static"))
+                m.generateMethod(codeGenerator);
+        }
+
+        //TODO: hasta ahora pude acomodar que los metodos dinamicos sobreescriban
+        // lo que corresponda en la vtable la generacion de metodos estaticos funciona
+        // correctamente, verificar los constructores y los accesos y hacer RETURN
+        
     }
 
     private void generateConstructor(CodeGenerator codeGenerator) throws CompiException {
