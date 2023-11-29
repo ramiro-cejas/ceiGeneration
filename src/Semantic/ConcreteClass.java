@@ -422,8 +422,9 @@ public class ConcreteClass{
         }
 
         //TODO: hasta ahora pude acomodar que los metodos dinamicos sobreescriban
-        // lo que corresponda en la vtable la generacion de metodos estaticos funciona
-        // correctamente, verificar los constructores y los accesos y hacer RETURN
+        // lo que corresponda en la vtable, la generacion y accesos de metodos estaticos funciona
+        // correctamente, al igual que los literales,
+        // verificar los constructores y los accesos y hacer RETURN
         
     }
 

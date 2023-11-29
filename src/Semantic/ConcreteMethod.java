@@ -77,6 +77,7 @@ public class ConcreteMethod {
     }
 
     private void generate(CodeGenerator codeGenerator, String tag) throws CompiException {
+        codeGenerator.gen("");
         System.out.println("Generating method " + name.getLexeme() +" in the class " + methodBlock.currentClass.name.getLexeme() + " with tag " + tag);
 
         String c1 = " # We store the dynamic link";
@@ -89,11 +90,11 @@ public class ConcreteMethod {
         codeGenerator.gen("STOREFP" + c3);
 
         //first we reserve space for the arguments
-        codeGenerator.gen("RMEM " + parameters.size() + " # We reserve space for the arguments");
+        //codeGenerator.gen("RMEM " + parameters.size() + " # We reserve space for the arguments");
         //here we will retrieve the parameters from the stack in reverse order
-        for (int i = parametersInOrder.size() - 1; i >= 0; i--) {
+        /*for (int i = parametersInOrder.size() - 1; i >= 0; i--) {
             codeGenerator.gen("LOAD " + i + " # We load the parameter " + parametersInOrder.get(i).name.getLexeme() + " to the top of the stack");
-        }
+        }*/
 
         methodBlock.generate(codeGenerator);
 

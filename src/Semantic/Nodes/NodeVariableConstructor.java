@@ -57,7 +57,7 @@ public class NodeVariableConstructor extends NodeVariable{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating constructor TODO");
+        System.out.println("Generating constructor");
 
         String cReserve = " # We reserve a memory cell to store the pointer to the constructed object";
         codeGenerator.gen("RMEM 1" + cReserve);

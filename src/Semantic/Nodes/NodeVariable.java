@@ -286,6 +286,8 @@ public class NodeVariable implements Node{
     }
 
     private void generateDynamicCall(CodeGenerator codeGenerator) throws CompiException {
+        codeGenerator.gen("LOAD 3 # We load the 'this' reference");
+
         String cSwap = " # We swap to keep the 'this' reference at the top of the stack";
 
         if(!(parentBlock.currentMethod.type.getLexeme().equals("void"))) {
