@@ -15,6 +15,7 @@ public class Variable {
     protected ConcreteClass memberOf;
     protected int offset;
     protected Token token;
+    public Token type;
 
     public Variable(Token t, ConcreteClass memberOf) {
         this.token = t;

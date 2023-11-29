@@ -52,4 +52,9 @@ public class EmptyNode implements Node{
         //do nothing
         return 0;
     }
+
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        //do nothing
+    }
 }

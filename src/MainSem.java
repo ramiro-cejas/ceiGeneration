@@ -9,18 +9,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 class MainSem {
-    public static void main(String[] args2) {
-        String [] args = {"resources/prueba.java"};
+    public static void main(String[] args) {
+        //String [] args = {"resources/prueba.java"};
         long actual = System.currentTimeMillis();
         boolean verbose = false;
         //borrar si existe el archivo ubicado en generation/a.out
-        File archivo = new File("generation/a.out");
-        // Intentar borrar el archivo
-        if (archivo.delete()) {
-            System.out.println("Archivo borrado con éxito.");
-        } else {
-            System.out.println("No se pudo borrar el archivo.");
-        }
+        String fileName = args[0].substring(args[0].lastIndexOf("/")+1);
+
         if (args.length == 0){
             System.out.println("ERROR: Ningun archivo fuente pasado como parámetro. Por favor proporcione la ruta del archivo como parámetro.");
         }
@@ -43,7 +38,7 @@ class MainSem {
                         System.out.println("\n---------------------------------------------------------\n\n[Tabla de simbolos]");
                         System.out.println(syntaxAnalyzer.getST());
                     }
-                    syntaxAnalyzer.generate();
+                    syntaxAnalyzer.generate(fileName);
                     errorsCollection.addAll(syntaxAnalyzer.getErrors());
                 }catch (Exception e){
                     errorsCollection.add(e);

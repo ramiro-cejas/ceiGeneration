@@ -83,4 +83,9 @@ public class NodeUnaryOp extends NodeExpression {
         //TODO
         return 0;
     }
+
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        //do nothing
+    }
 }

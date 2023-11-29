@@ -102,7 +102,7 @@ public class SymbolTable {
     private void addObjectMethods(ConcreteClass object) throws SemanticException {
         ConcreteMethod method = new ConcreteMethod(new Token("idMetVar", "debugPrint", -1), new Token("keyword_void", "void", -1), new Token("keyword_static", "static", -1), this);
         method.addParameter(new ConcreteAttribute(new Token("idMetVar","i",-1), new Token("keyword_int","int",-1), new Token("-", "-", -1)));
-        method.methodBlock = new NodeBlock(new Token("punctuator_{","{",-1), object, method, null);
+        method.methodBlock = new BlockDebugPrint(object, method);
         object.addMethod(method);
 
         ConcreteMethod objectConstructor = new ConcreteMethod(new Token("Object", "Object", -1), new Token("Object", "Object", -1), new Token("-", "-", -1), this);
@@ -333,8 +333,8 @@ public class SymbolTable {
         return errors;
     }
 
-    public void generate() throws CompiException {
-        codeGenerator = new CodeGenerator("generation");
+    public void generate(String name) throws CompiException {
+        codeGenerator = new CodeGenerator("/", name);
 
         generateMainMethodCall(codeGenerator);
         generateMalloc(codeGenerator);
@@ -343,6 +343,8 @@ public class SymbolTable {
         for (ConcreteClass c : classes.values()){
             c.generate(codeGenerator);
         }
+
+        codeGenerator.closeFile();
     }
 
     private void generateMainMethodCall(CodeGenerator codeGenerator) throws CompiException {

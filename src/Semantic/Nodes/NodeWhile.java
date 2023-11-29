@@ -80,4 +80,9 @@ public class NodeWhile implements Node{
         //TODO check if this is correct
         return 0;
     }
+
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        //do nothing
+    }
 }

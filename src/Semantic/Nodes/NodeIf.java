@@ -90,4 +90,9 @@ public class NodeIf implements Node{
     public int getOffset() {
         return 0;
     }
+
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        //do nothing
+    }
 }

@@ -27,7 +27,7 @@ public class TagHandler {
     }
 
     public static String getAttributeTag(ConcreteAttribute a, ConcreteClass c) {
-        String c_attr = a.getName().getLexeme();
+        String c_attr = "Attribute_" + a.getName().getLexeme();
         String c_class = c.name.getLexeme();
         return (c_attr + "@" + c_class);
     }

@@ -19,6 +19,7 @@ public class NodeVariable implements Node{
     public ArrayList<Node> parameters = new ArrayList<>();
     private ConcreteMethod methodToCall;
     private ConcreteAttribute referencedVariable;
+    private boolean isInLeftSideOfAssign = false;
 
     public NodeVariable(Token name, NodeBlock parentBlock) {
         this.name = name;
@@ -181,18 +182,25 @@ public class NodeVariable implements Node{
         if (isMethod){
             //si el metodo referenciado es estatico
             if(methodToCall.isStatic.getLexeme().equals("static")) {
-                System.out.println("Generating static method access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
+                System.out.println("Generating static method access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme() + " in the line " + name.getRow());
                 generateStaticCall(codeGenerator);
             } else {
-                System.out.println("Generating non static method access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
+                System.out.println("Generating non static method access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme() + " in the line " + name.getRow());
                 generateDynamicCall(codeGenerator);
             }
         } else {
+            System.out.println("Generating attribute access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme() + " in the line " + name.getRow());
+            System.out.println(parentBlock);
+            System.out.println(parentBlock.getVisible(name.getLexeme()));
+            System.out.println(parentBlock.getVisible(name.getLexeme()).isStatic.getLexeme());
             if(parentBlock.getVisible(name.getLexeme()).isStatic.getLexeme().equals("static")) {
                 generateStaticAttr(codeGenerator);
             } else {
                 generateDynamicAttr(codeGenerator);
             }
+        }
+        if (childChain != null){
+            childChain.generate(codeGenerator);
         }
     }
 
@@ -207,9 +215,17 @@ public class NodeVariable implements Node{
         return 0;
     }
 
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        isInLeftSideOfAssign = true;
+        if (childChain != null){
+            childChain.setIsInLeftSideOfAnAssignment();
+        }
+    }
+
     protected void generateStaticAttr(CodeGenerator codeGenerator) throws CompiException {
         System.out.println("Generating static attribute access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
-        boolean readAccess = inTheLastIsMethod() || childChain != null;
+        boolean readAccess = !isInLeftSideOfAssign || childChain != null;
         ConcreteAttribute attribute = referencedVariable;
         String tag = TagHandler.getAttributeTag(attribute, parentBlock.currentClass);
 
@@ -232,11 +248,13 @@ public class NodeVariable implements Node{
         System.out.println("Generating dynamic attribute access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
         //if the referenced variable is a class attribute
         boolean attribute = parentBlock.classAttributes.contains(referencedVariable);
-        boolean readAccess = inTheLastIsMethod() || childChain != null;
+        System.out.println(" ////////// IS IN LEFT SIDE OF ASSIGN: " + isInLeftSideOfAssign);
+        boolean readAccess = !isInLeftSideOfAssign || childChain != null;
         int offset = referencedVariable.getOffset();
         //boolean isParameter = parentBlock.methodParameters.contains(referencedVariable);
 
         if(attribute) {
+
             String cThis = " # Accessing a dynamic attribute, we put a reference to 'this' at the top of the stack.";
             codeGenerator.gen("LOAD 3" + cThis);
 
@@ -265,8 +283,10 @@ public class NodeVariable implements Node{
     }
 
     private void generateStaticCall(CodeGenerator codeGenerator) throws CompiException {
-        String cPop = " # We consume the 'this' reference from the 'chainee' that's on top of the stack, since we won't use it";
-        codeGenerator.gen("POP" + cPop);
+        if (parentChain != null) {
+            String cPop = " # We consume the 'this' reference from the 'chainee' that's on top of the stack, since we won't use it";
+            codeGenerator.gen("POP" + cPop);
+        }
 
         if(!(parentBlock.currentMethod.type.getLexeme().equals("void"))) {
             String cRet = " # We reserve a memory cell for the method's return value";

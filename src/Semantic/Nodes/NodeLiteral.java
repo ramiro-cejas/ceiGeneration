@@ -86,6 +86,11 @@ public class NodeLiteral implements Node{
         return 0;
     }
 
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        //do nothing
+    }
+
     private void genFloat(CodeGenerator codeGenerator) {
         //TODO: Implement this
     }

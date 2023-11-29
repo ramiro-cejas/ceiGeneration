@@ -892,7 +892,7 @@ public class SyntaxAnalyzer {
         return symbolTable.getErrors();
     }
 
-    public void generate() throws CompiException {
-        symbolTable.generate();
+    public void generate(String name) throws CompiException {
+        symbolTable.generate(name);
     }
 }

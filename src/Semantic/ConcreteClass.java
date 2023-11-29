@@ -67,6 +67,7 @@ public class ConcreteClass{
             attributes.remove(a.name.getLexeme());
             symbolTable.semExceptionHandler.show(new SemanticException(a.name,"Attribute " + a.name.getLexeme() + " already defined in line "+ a.name.getRow()));
         }
+        a.variableType = ConcreteAttribute.ATTRIBUTE;
     }
 
     public void check() throws SemanticException {
@@ -170,6 +171,7 @@ public class ConcreteClass{
             nextAttributeOffset = parent.getNextAttributeOffset();
         }
 
+        System.out.println("///Offsets for attribute in class " + name.getLexeme() + ": ");
         for(ConcreteAttribute attribute : attributes.values()) {
             boolean isStatic = attribute.isStatic.getLexeme().equals("static");
             boolean isInherited = attribute.originalClass != this;
@@ -177,10 +179,11 @@ public class ConcreteClass{
             boolean needsOffset = !(isStatic || isInherited);
 
             if(needsOffset) {
-                System.out.println("Attribute: " + attribute.name.getLexeme() + " Offset: " + nextAttributeOffset);
                 attribute.setOffset(nextAttributeOffset);
                 nextAttributeOffset++;
             }
+
+            System.out.println("Attribute: " + attribute.name.getLexeme() + " Offset: " + attribute.getOffset() + " declared in class " + attribute.originalClass.name.getLexeme());
         }
 
         //now we assign offset to the local variables of every method
@@ -291,9 +294,7 @@ public class ConcreteClass{
             }
             System.out.println("--- Methods in order: " + methodsInOrder.size() + " for class " + name.getLexeme());
             for (ConcreteMethod m : methodsInOrder){
-                System.out.print("Method: " + m.name.getLexeme() + " declared in the class " + m.originalClass.name.getLexeme());
-                if (m.isStatic.getLexeme().equals("static"))
-                    System.out.print(" is static");
+                System.out.print("Method: " + m.name.getLexeme() + " declared in the class " + m.originalClass.name.getLexeme() + " has offset " + m.getOffset());
                 System.out.println("");
             }
             System.out.println("=============");
@@ -388,7 +389,8 @@ public class ConcreteClass{
         List<ConcreteAttribute> staticAttributes = new ArrayList<>();
 
         for(ConcreteAttribute attribute : attributes.values()) {
-            if(attribute.isStatic().getLexeme().equals("static")) {
+            if(attribute.isStatic().getName().equals("keyword_static")) {
+                System.out.println(" ======= AGREGUE ATRIBUTO ESTATICO " + attribute.getName().getLexeme() + " EN LA CLASE " + name.getLexeme());
                 staticAttributes.add(attribute);
             }
         }

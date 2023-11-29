@@ -58,6 +58,7 @@ public class NodeAssignment implements Node{
             type = leftExpression.getType();
         }
         alreadyChecked = true;
+        leftExpression.setIsInLeftSideOfAnAssignment();
     }
 
     @Override
@@ -77,8 +78,10 @@ public class NodeAssignment implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating assignment TODO");
-        //TODO
+        System.out.println("Generating assignment");
+        rightExpression.generate(codeGenerator);
+        leftExpression.generate(codeGenerator);
+        // TODO posible DUP para a = b = 3;
     }
 
     @Override
@@ -90,5 +93,10 @@ public class NodeAssignment implements Node{
     public int getOffset() {
         //TODO
         return 0;
+    }
+
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        //do nothing
     }
 }

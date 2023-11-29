@@ -18,8 +18,8 @@ class MainGeneration {
         MainSem.main(args2);
         //execute the VirtualMachine
         // Comando a ejecutar
-        String comando = "java -jar CeIVM2023/CeIVM-cei2011.jar generation/a.out";
-
+        //String comando = "java -jar CeIVM2023/CeIVM-cei2011.jar generation/a.out";
+        /*
         try {
             // Ejecutar el comando
             Process proceso = Runtime.getRuntime().exec(comando);
@@ -45,6 +45,6 @@ class MainGeneration {
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

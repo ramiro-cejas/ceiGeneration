@@ -12,10 +12,11 @@ public class NodeVarDeclaration implements Node{
     public Node expression;
     private boolean alreadyChecked = false;
     private NodeBlock parentBlock;
-    private Variable variable;
+    private ConcreteAttribute variable;
 
     public NodeVarDeclaration(Token id, Node expression, NodeBlock parentBlock) {
-        this.variable = new Variable(id, parentBlock.currentClass);
+        this.variable = new ConcreteAttribute(id, type, new Token("", "", -1));
+        variable.variableType = ConcreteAttribute.LOCAL_VARIABLE;
         parentBlock.addLocalVariable(variable);
         this.id = id;
         this.expression = expression;
@@ -40,7 +41,9 @@ public class NodeVarDeclaration implements Node{
             if (parentBlock.localVariables.stream().anyMatch(x -> x.getName().getLexeme().equals(id.getLexeme())) || parentBlock.methodParameters.stream().anyMatch(x -> x.getName().getLexeme().equals(id.getLexeme()))){
                 throw new SemanticException(id,"Variable " + id.getLexeme() + " already declared");
             }
-            parentBlock.localVariables.add(new ConcreteAttribute(id, type, new Token("", "", -1)));
+            ConcreteAttribute toAdd = new ConcreteAttribute(id, type, new Token("", "", -1));
+            toAdd.variableType = ConcreteAttribute.LOCAL_VARIABLE;
+            parentBlock.localVariables.add(toAdd);
         }
         alreadyChecked = true;
     }
@@ -89,6 +92,11 @@ public class NodeVarDeclaration implements Node{
     @Override
     public int getOffset() {
         //TODO check if this is correct
-        return 0;
+        return variable.getOffset();
+    }
+
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        //do nothing
     }
 }

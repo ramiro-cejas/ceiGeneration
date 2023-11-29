@@ -9,6 +9,11 @@ public class ConcreteAttribute {
     Token type;
     ConcreteClass originalClass;
     int offset;
+    public int variableType = 0;
+
+    public static final int ATTRIBUTE = 0;
+    public static final int PARAMETER = 1;
+    public static final int LOCAL_VARIABLE = 2;
 
     public ConcreteAttribute(Token name, Token type, Token isStatic) {
         this.name = name;

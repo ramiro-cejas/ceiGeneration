@@ -10,7 +10,6 @@ import SecondSemantic.Semantic.SymbolTable;
 
 public class NodeReturn implements Node{
     public Token returnTok;
-
     public Node expression;
     private Token type;
     private boolean alreadyChecked = false;
@@ -100,6 +99,50 @@ public class NodeReturn implements Node{
     public void generate(CodeGenerator codeGenerator) throws CompiException {
         System.out.println("Generating return TODO");
         //TODO
+        // si tengo retorno void o es un constructor entonces solo hago salida
+        // sino hago retorno y luego salida
+        if (parentBlock.currentMethod.type.getLexeme().equals("void") || parentBlock.currentMethod == parentBlock.currentClass.constructor){
+            generateExit(codeGenerator);
+        } else {
+            generateReturn(codeGenerator);
+            generateExit(codeGenerator);
+        }
+
+    }
+
+    private void generateExit(CodeGenerator codeGenerator) throws CompiException {
+        int parameterCount = parentBlock.methodParameters.size();
+        int dynamicBonus = parentBlock.currentMethod.isStatic.getName().equals("keyword_static") ? 0 : 1;
+
+        int returnCellOffset = 3 + parameterCount + dynamicBonus;
+
+        expression.generate(codeGenerator);
+
+        String cReturn = " # We save the return value in the space reserved for it";
+        codeGenerator.gen("STORE " + returnCellOffset + cReturn);
+
+        generateReturn(codeGenerator);
+    }
+
+    private void generateReturn(CodeGenerator codeGenerator) throws CompiException {
+        int parentBlockLastOffset = parentBlock.getOffset();
+        int localVarCount = -parentBlockLastOffset;
+
+        int parameterCount = parentBlock.currentMethod.parameters.size();
+        int dynamicBonus = parentBlock.currentMethod.isStatic.getName().equals("keyword_static") ? 0 : 1;
+
+        int retParameter = parameterCount + dynamicBonus;
+
+        if(localVarCount > 0) {
+            String cFree = " # On return: We free the space used by local vars";
+            codeGenerator.gen("FMEM " + localVarCount + cFree);
+        }
+
+        String cStoreFP = " # On return: We point FP to caller's AR";
+        codeGenerator.gen("STOREFP" + cStoreFP);
+
+        String cRet = " # On return: We free up memory cells equal to number of params [+1 if unit is dynamic]";
+        codeGenerator.gen("RET " + retParameter + cRet);
     }
 
     @Override
@@ -111,5 +154,10 @@ public class NodeReturn implements Node{
     public int getOffset() {
         //TODO
         return 0;
+    }
+
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        //do nothing
     }
 }

@@ -1,5 +1,5 @@
 .CODE
-PUSH Method_main@B # We put main method's tag at the top of the stack
+PUSH Method_main@Init # We put main method's tag at the top of the stack
 CALL # We jump to main method
 HALT # End of program.
 malloc: LOADFP
@@ -18,37 +18,38 @@ RET 1
 .DATA
 str_empty: DW 0
 .DATA
-VT@B: DW Method_method1@B,Method_method2@B,Method_method3@B
+VT@A: NOP # This class doesnt have any dynamic methods
+
 .CODE
-
-Method_method1@B: LOADFP # We store the dynamic link
+Constructor@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 STOREFP # We point FP to caller's AR
-RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+RET 2 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+.DATA
+VT@Init: NOP # This class doesnt have any dynamic methods
 
-Method_method2@B: LOADFP # We store the dynamic link
+.CODE
+Method_main@Init: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-STOREFP # We point FP to caller's AR
-RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
-
-Method_method3@B: LOADFP # We store the dynamic link
-LOADSP # We signal were the AR starts
-STOREFP # We signal the AR being built as the current AR
-STOREFP # We point FP to caller's AR
-RET 3 # We free up memory cells equal to number of params [+1 if unit is dynamic]
-
-Method_main@B: LOADFP # We store the dynamic link
-LOADSP # We signal were the AR starts
-STOREFP # We signal the AR being built as the current AR
-PUSH 1
-PUSH Method_printI@System # We push the static method's tag to the top of the stack
-CALL # We make the call.
+RMEM 1 # We reserve a memory cell to store the pointer to the constructed object
+PUSH 2 # We load malloc's parameter: the number of cells to reserve for the constructed object
+PUSH malloc # We put malloc's tag on top of the stack
+CALL # We make the call
+DUP # We duplicate malloc's return so we don't lose it on our next instr.
+PUSH VT@A # We push the VTable's tag so we can link it to the CIR.
+STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
+DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
+PUSH 1234
+SWAP  # We swap to keep the 'this' reference at the top of the stack
+PUSH Constructor@A # We put the constructor's tag on top of the stack
+CALL # We make the call
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
-Constructor@B: LOADFP # We store the dynamic link
+.CODE
+Constructor@Init: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 STOREFP # We point FP to caller's AR
@@ -56,12 +57,17 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 .DATA
 VT@Object: NOP # This class doesnt have any dynamic methods
 
+.CODE
 Method_debugPrint@Object: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
+LOAD 3 # We put the parameter i at the top of the stack (offset is hard-coded)
+IPRINT # We print the integer we just loaded
+PRNLN # We print the carriage return
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Constructor@Object: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -70,6 +76,7 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 .DATA
 VT@String: NOP # This class doesnt have any dynamic methods
 
+.CODE
 Constructor@String: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -81,6 +88,7 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 .DATA
 VT@System: NOP # This class doesnt have any dynamic methods
 
+.CODE
 Method_printC@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -89,6 +97,7 @@ CPRINT # We print the char we just loaded
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Method_printS@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -98,6 +107,7 @@ SPRINT # We print the string we just loaded
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Method_println@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -105,6 +115,7 @@ PRNLN # We print the carriage return
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Method_printCln@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -114,6 +125,7 @@ PRNLN # We print the carriage return
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Method_printSln@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -124,6 +136,7 @@ PRNLN # We print the carriage return
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Method_read@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -134,6 +147,7 @@ STORE 3 # We save the return value in the space reserved for it (offset is hard-
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Method_printB@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -142,6 +156,7 @@ BPRINT # We print the boolean we just loaded
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Method_printIln@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -151,6 +166,7 @@ PRNLN # We print the carriage return
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Method_printI@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -159,6 +175,7 @@ IPRINT # We print the integer we just loaded
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Method_printBln@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
@@ -168,6 +185,7 @@ PRNLN # We print the carriage return
 STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
+.CODE
 Constructor@System: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR

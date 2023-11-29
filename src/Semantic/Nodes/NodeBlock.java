@@ -16,13 +16,15 @@ public class NodeBlock implements Node {
     ArrayList<ConcreteAttribute> methodParameters = new ArrayList<>();
     ArrayList<ConcreteAttribute> localVariables = new ArrayList<>();
 
+    private boolean alreadyAssigned = false;
+
     public NodeBlock parentBlock;
     public ConcreteClass currentClass;
     public ConcreteMethod currentMethod;
 
     private SymbolTable symbolTable;
     private int offset = 0;
-    protected List<Variable> variableList = new ArrayList<>();
+    protected List<ConcreteAttribute> variableList = new ArrayList<>();
 
     public NodeBlock(Token initialToken, ConcreteClass currentClass, ConcreteMethod currentMethod, NodeBlock parentBlock) {
         this.initialToken = initialToken;
@@ -67,6 +69,7 @@ public class NodeBlock implements Node {
                 }
             }
         }
+        assignOffsets();
     }
 
     public ConcreteAttribute getVisible(String toSearch) {
@@ -124,11 +127,16 @@ public class NodeBlock implements Node {
 
     @Override
     public void assignOffsets() {
+        if (alreadyAssigned)
+            return;
+        System.out.println(" %%%% Assigning offsets to block of the method " + currentMethod.name.getLexeme() + " of the class " + currentClass.name.getLexeme() + " %%%%");
         if(parentBlock != null) {
             offset = parentBlock.getOffset();
+            System.out.println("/////Offset of parent block is " + offset);
         }
 
-        for(Variable variable : variableList) {
+        for(ConcreteAttribute variable : localVariables) {
+            System.out.println("///// AAAAAAAA Offset of " + variable.getName().getLexeme() + " is " + offset);
             variable.setOffset(offset);
             offset--;
         }
@@ -136,6 +144,8 @@ public class NodeBlock implements Node {
         for(Node s : sentences) {
             s.assignOffsets();
         }
+
+        alreadyAssigned = true;
     }
 
     @Override
@@ -143,7 +153,12 @@ public class NodeBlock implements Node {
         return offset;
     }
 
-    public void addLocalVariable(Variable variable) {
+    @Override
+    public void setIsInLeftSideOfAnAssignment() {
+        //do nothing
+    }
+
+    public void addLocalVariable(ConcreteAttribute variable) {
         variableList.add(variable);
     }
 }

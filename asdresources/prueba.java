@@ -10,9 +10,9 @@ class B {
         //System.printC(b);
         //System.printB(c);
         //A.methodToPrintAndTest(4,5);
-        System.printI(1);
+        //System.printI(1);
 
-        //debugPrint(1);
+        debugPrint(1);
     }
     int method1(int a, int b){
         return a + b;

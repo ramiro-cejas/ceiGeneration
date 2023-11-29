@@ -44,6 +44,7 @@ public class ConcreteMethod {
         }
         else
             symbolTable.semExceptionHandler.show(new SemanticException(p.name,"Parameter " + p.name.getLexeme() + " already defined in line "+ p.name.getRow()));
+        p.variableType = ConcreteAttribute.PARAMETER;
     }
 
     public void check() throws SemanticException {
@@ -67,6 +68,16 @@ public class ConcreteMethod {
     }
 
     public void generateMethod(CodeGenerator codeGenerator) throws CompiException {
+        // assign offsets to the parameters
+        int staticBonus = isStatic.getName().equals("keyword_static") ? 0 : 1;
+        int numberOfParameters = parametersInOrder.size();
+        int minOffset = 3 + staticBonus;
+        for(int i = 1; i <= numberOfParameters; i++) {
+            int offset = numberOfParameters - i + minOffset;
+            int index = i-1;
+            parametersInOrder.get(index).setOffset(offset);
+        }
+
         String tag = TagHandler.getMethodTag(this);
         generate(codeGenerator, tag);
     }
@@ -78,6 +89,8 @@ public class ConcreteMethod {
 
     private void generate(CodeGenerator codeGenerator, String tag) throws CompiException {
         codeGenerator.gen("");
+        codeGenerator.gen(".CODE");
+
         System.out.println("Generating method " + name.getLexeme() +" in the class " + methodBlock.currentClass.name.getLexeme() + " with tag " + tag);
 
         String c1 = " # We store the dynamic link";

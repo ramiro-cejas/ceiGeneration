@@ -19,4 +19,6 @@ public interface Node {
     void assignOffsets();
 
     int getOffset();
+
+    void setIsInLeftSideOfAnAssignment();
 }
