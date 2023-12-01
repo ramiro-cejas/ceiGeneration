@@ -58,14 +58,14 @@ STOREFP # We signal the AR being built as the current AR
 RMEM 1 # Reserving space for block local vars
 PUSH 0
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-while_15: NOP
+while_16: NOP
 LOAD 0 # We get the variable i is 2 from the stack through its offset
 PUSH 3
 LT
-BF end_while_15
+BF end_while_16
 RMEM 2 # Reserving space for block local vars
 .DATA
-str_12: DW "test",0
+str_20: DW "test",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -75,7 +75,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_12 # We put the String tag at the top of the stack
+PUSH str_20 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE -2 # We store what's on top of the pile in the stack through localvar's offset
 LOAD -2 # We get the variable s is 2 from the stack through its offset
@@ -88,17 +88,17 @@ DUP # duplicating the value to be assigned
 STORE 0 # We write into the variable in the stack, through its offset
 POP # Discarding not used return value
 FMEM 2 # Freeing space reserved for block local vars
-JUMP while_15
-end_while_15: NOP
+JUMP while_16
+end_while_16: NOP
 PUSH 0
 DUP # duplicating the value to be assigned
 STORE 0 # We write into the variable in the stack, through its offset
 POP # Discarding not used return value
-while_16: NOP
+while_17: NOP
 LOAD 0 # We get the variable i is 2 from the stack through its offset
 PUSH 3
 LT
-BF end_while_16
+BF end_while_17
 RMEM 2 # Reserving space for block local vars
 RMEM 1 # We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # We load malloc's parameter: the number of cells to reserve for the constructed object
@@ -121,8 +121,8 @@ DUP # duplicating the value to be assigned
 STORE 0 # We write into the variable in the stack, through its offset
 POP # Discarding not used return value
 FMEM 2 # Freeing space reserved for block local vars
-JUMP while_16
-end_while_16: NOP
+JUMP while_17
+end_while_17: NOP
 FMEM 1 # Freeing space reserved for block local vars
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]

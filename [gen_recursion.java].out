@@ -18,78 +18,66 @@ RET 1
 .DATA
 str_empty: DW 0
 .DATA
-VT@Init: NOP # This class doesnt have any dynamic methods
+VT@Rec: DW Method_rec@Rec
+.CODE
 
 .CODE
-Method_m2@Init: LOADFP # We store the dynamic link
+Method_rec@Rec: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-LOAD 3 # We get the variable s is 1 from the stack through its offset
-PUSH Method_printSln@System # We push the static method's tag to the top of the stack
+LOAD 4 # We get the variable n is 1 from the stack through its offset
+PUSH 0
+LT
+BF out_if_14
+STOREFP # On return: We point FP to caller's AR
+RET 2 # On return: We free up memory cells equal to number of params [+1 if unit is dynamic]
+out_if_14: NOP
+LOAD 4 # We get the variable n is 1 from the stack through its offset
+PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
+CALL # We make the call.
+LOAD 3 # We load the 'this' reference
+LOAD 4 # We get the variable n is 1 from the stack through its offset
+PUSH 1
+SUB
+SWAP  # We swap to keep the 'this' reference at the top of the stack
+DUP # We duplicate the 'this' reference so we don't lose it when it's used by LOADREF
+LOADREF 0 # We load the VTable (VTable offset is always 0)
+LOADREF 0 # We load the method's address through the VTable.
 CALL # We make the call.
 STOREFP # We point FP to caller's AR
+RET 2 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+
+.CODE
+Constructor@Rec: LOADFP # We store the dynamic link
+LOADSP # We signal were the AR starts
+STOREFP # We signal the AR being built as the current AR
+STOREFP # We point FP to caller's AR
 RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic]
+.DATA
+VT@Init: NOP # This class doesnt have any dynamic methods
 
 .CODE
 Method_main@Init: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-PUSH Method_m@Init # We push the static method's tag to the top of the stack
-CALL # We make the call.
-STOREFP # We point FP to caller's AR
-RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
-
-.CODE
-Method_m@Init: LOADFP # We store the dynamic link
-LOADSP # We signal were the AR starts
-STOREFP # We signal the AR being built as the current AR
 RMEM 1 # Reserving space for block local vars
-.DATA
-str_21: DW "Hello World",0
-.CODE
-RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
-PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
+RMEM 1 # We reserve a memory cell to store the pointer to the constructed object
+PUSH 1 # We load malloc's parameter: the number of cells to reserve for the constructed object
 PUSH malloc # We put malloc's tag on top of the stack
 CALL # We make the call
 DUP # We duplicate malloc's return so we don't lose it on our next instr.
-PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
+PUSH VT@Rec # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_21 # We put the String tag at the top of the stack
-STOREREF 1 # We link the tag to the 'fake attribute'
+PUSH Constructor@Rec # We put the constructor's tag on top of the stack
+CALL # We make the call
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable s is 2 from the stack through its offset
-PUSH Method_printSln@System # We push the static method's tag to the top of the stack
-CALL # We make the call.
-.DATA
-str_22: DW "Hola Mundo!",0
-.CODE
-RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
-PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
-PUSH malloc # We put malloc's tag on top of the stack
-CALL # We make the call
-DUP # We duplicate malloc's return so we don't lose it on our next instr.
-PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
-STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
-DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_22 # We put the String tag at the top of the stack
-STOREREF 1 # We link the tag to the 'fake attribute'
-PUSH Method_printSln@System # We push the static method's tag to the top of the stack
-CALL # We make the call.
-.DATA
-str_23: DW "Bonjour monde",0
-.CODE
-RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
-PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
-PUSH malloc # We put malloc's tag on top of the stack
-CALL # We make the call
-DUP # We duplicate malloc's return so we don't lose it on our next instr.
-PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
-STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
-DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_23 # We put the String tag at the top of the stack
-STOREREF 1 # We link the tag to the 'fake attribute'
-PUSH Method_m2@Init # We push the static method's tag to the top of the stack
+LOAD 0 # We get the variable r is 2 from the stack through its offset
+PUSH 5
+SWAP  # We swap to keep the 'this' reference at the top of the stack
+DUP # We duplicate the 'this' reference so we don't lose it when it's used by LOADREF
+LOADREF 0 # We load the VTable (VTable offset is always 0)
+LOADREF 0 # We load the method's address through the VTable.
 CALL # We make the call.
 FMEM 1 # Freeing space reserved for block local vars
 STOREFP # We point FP to caller's AR

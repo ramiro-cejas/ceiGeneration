@@ -33,7 +33,16 @@ public class NodeVariableConstructor extends NodeVariable{
                         //check if the parameter is a subtype of the parameter in the constructor
                         //if the parameter is a class, check if it's a subtype of the parameter in the constructor
                         if (parameters.get(i).getType().getName().equals("idClass")){
-                            if (!symbolTable.classes.get(parameters.get(i).getType().getLexeme()).isSubTypeOf(symbolTable.classes.get(symbolTable.classes.get(type.getLexeme()).constructor.parametersInOrder.get(i).getType().getLexeme()))){
+                            ConcreteClass classOfParameter = symbolTable.classes.get(parameters.get(i).getType().getLexeme());
+                            if (classOfParameter == null){
+                                classOfParameter = symbolTable.interfaces.get(parameters.get(i).getType().getLexeme());
+                            }
+                            ConcreteMethod constructor = symbolTable.classes.get(type.getLexeme()).constructor;
+                            ConcreteClass classOfConstructorParameter = symbolTable.classes.get(constructor.parametersInOrder.get(i).getType().getLexeme());
+                            if (classOfConstructorParameter == null){
+                                classOfConstructorParameter = symbolTable.interfaces.get(constructor.parametersInOrder.get(i).getType().getLexeme());
+                            }
+                            if (!classOfParameter.isSubTypeOf(classOfConstructorParameter)){
                                 symbolTable.semExceptionHandler.show(new SemanticException(type,"Parameter " + i + " is not a subtype of the parameter in the constructor"));
                             }
                         } else {

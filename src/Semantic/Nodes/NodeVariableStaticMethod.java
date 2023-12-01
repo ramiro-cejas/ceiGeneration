@@ -3,10 +3,7 @@ package SecondSemantic.Semantic.Nodes;
 import SecondSemantic.Extras.CompiException;
 import SecondSemantic.Generation.CodeGenerator;
 import SecondSemantic.Lexical.Token;
-import SecondSemantic.Semantic.ConcreteAttribute;
-import SecondSemantic.Semantic.ConcreteMethod;
-import SecondSemantic.Semantic.SemanticException;
-import SecondSemantic.Semantic.SymbolTable;
+import SecondSemantic.Semantic.*;
 
 public class NodeVariableStaticMethod extends NodeVariable{
 
@@ -21,11 +18,14 @@ public class NodeVariableStaticMethod extends NodeVariable{
     }
 
     public void check(SymbolTable symbolTable) throws SemanticException {
+        System.out.println("Checking static method access");
         if (alreadyChecked)
             return;
         //check if the class exist in the symboltable and check if that class has the static method
         if (symbolTable.classes.containsKey(className.getLexeme())){
+            System.out.println("Class " + className.getLexeme() + " exists");
             if (symbolTable.classes.get(className.getLexeme()).methods.containsKey(name.getLexeme())){
+                System.out.println("Static method " + name.getLexeme() + " exists");
                 //check if the parameters are the same
                 ConcreteMethod methodToMatch = symbolTable.classes.get(className.getLexeme()).methods.get(name.getLexeme());
                 if (methodToMatch.parameters.size() != parameters.size() || !methodToMatch.isStatic.getName().equals("keyword_static")){
@@ -33,10 +33,24 @@ public class NodeVariableStaticMethod extends NodeVariable{
                 } else {
                     for (int i = 0; i < parameters.size(); i++){
                         parameters.get(i).check(symbolTable);
-                        if (!parameters.get(i).getType().getLexeme().equals(methodToMatch.parametersInOrder.get(i).getType().getLexeme())){
-                            System.out.println("Static method " + name.getLexeme() + " is not defined in class " + className.getLexeme() + " with the parameter " + parameters.get(i).getType().getLexeme());
-                            //symbolTable.semExceptionHandler.show(new SemanticException(name,"Static method " + name.getLexeme() + " is not defined in class " + className.getLexeme() + " with the given parameters"));
-                        }
+                        if (parameters.get(i).getType().getName().equals("idClass")){
+                            ConcreteClass classOfParameter = symbolTable.classes.get(parameters.get(i).getType().getLexeme());
+                            if (classOfParameter == null){
+                                classOfParameter = symbolTable.interfaces.get(parameters.get(i).getType().getLexeme());
+                            }
+                            ConcreteMethod method = symbolTable.classes.get(className.getLexeme()).methods.get(name.getLexeme());
+                            ConcreteClass classOfMethodParameter = symbolTable.classes.get(method.parametersInOrder.get(i).getType().getLexeme());
+                            if (classOfMethodParameter == null){
+                                classOfMethodParameter = symbolTable.interfaces.get(method.parametersInOrder.get(i).getType().getLexeme());
+                            }
+                            if (!classOfParameter.isSubTypeOf(classOfMethodParameter)){
+                                symbolTable.semExceptionHandler.show(new SemanticException(name,"Static method " + name.getLexeme() + " is not defined in class " + className.getLexeme() + " with the given parameters"));
+                            }
+                        }else
+                            if (!parameters.get(i).getType().getLexeme().equals(methodToMatch.parametersInOrder.get(i).getType().getLexeme())){
+
+                                symbolTable.semExceptionHandler.show(new SemanticException(name,"Static method " + name.getLexeme() + " is not defined in class " + className.getLexeme() + " with the given parameters"));
+                            }
                     }
                     type = methodToMatch.type;
                     methodToCall = methodToMatch;

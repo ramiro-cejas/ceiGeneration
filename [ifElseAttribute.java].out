@@ -35,18 +35,18 @@ LOAD 3 # Accessing a dynamic attribute, we put a reference to 'this' at the top 
 LOADREF 1 # We get the variable from the heap through the 'this' reference and its offset
 PUSH 4
 LT
-BF else_if_17
+BF else_if_18
 LOAD 3 # Accessing a dynamic attribute, we put a reference to 'this' at the top of the stack.
 LOADREF 1 # We get the variable from the heap through the 'this' reference and its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-JUMP out_if_17
-else_if_17: NOP
+JUMP out_if_18
+else_if_18: NOP
 PUSH 1
 NEG
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-out_if_17: NOP
+out_if_18: NOP
 LOAD 3 # Accessing a dynamic attribute, we put a reference to 'this' at the top of the stack.
 LOADREF 1 # We get the variable from the heap through the 'this' reference and its offset
 PUSH 3

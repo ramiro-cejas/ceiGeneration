@@ -461,7 +461,7 @@ public class SyntaxAnalyzer {
         print("Entre en retorno");
         Token tokenReturn = tokenActual;
         match("keyword_return");
-        Node toReturn = new NodeReturn(tokenReturn,expresionOpcional());
+        Node toReturn = new NodeReturn(tokenReturn,expresionOpcional(), symbolTable.currentClass.currentMethod.currentBlock);
         return toReturn;
     }
 

@@ -27,16 +27,16 @@ STOREFP # We signal the AR being built as the current AR
 PUSH 3
 PUSH 4
 LT
-BF else_if_20
+BF else_if_21
 PUSH 1
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-JUMP out_if_20
-else_if_20: NOP
+JUMP out_if_21
+else_if_21: NOP
 PUSH 2
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-out_if_20: NOP
+out_if_21: NOP
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 

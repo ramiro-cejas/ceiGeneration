@@ -140,7 +140,7 @@ Method_sound@Animal: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 .DATA
-str_5: DW " ",0
+str_13: DW " ",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -150,7 +150,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_5 # We put the String tag at the top of the stack
+PUSH str_13 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR
@@ -173,7 +173,7 @@ Method_sound@Cat: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 .DATA
-str_6: DW "meow",0
+str_14: DW "meow",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -183,7 +183,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_6 # We put the String tag at the top of the stack
+PUSH str_14 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR
@@ -232,7 +232,7 @@ Method_sound@Cow: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 .DATA
-str_7: DW "moo",0
+str_15: DW "moo",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -242,7 +242,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_7 # We put the String tag at the top of the stack
+PUSH str_15 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR
@@ -291,7 +291,7 @@ Method_sound@Dog: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 .DATA
-str_8: DW "woof",0
+str_16: DW "woof",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -301,7 +301,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_8 # We put the String tag at the top of the stack
+PUSH str_16 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR

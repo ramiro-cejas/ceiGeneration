@@ -57,7 +57,7 @@ LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 RMEM 1 # Reserving space for block local vars
 .DATA
-str_11: DW """,0
+str_19: DW """,0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -67,7 +67,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_11 # We put the String tag at the top of the stack
+PUSH str_19 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
 LOAD 0 # We get the variable quotes is 2 from the stack through its offset

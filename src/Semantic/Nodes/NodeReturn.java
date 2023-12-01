@@ -15,9 +15,10 @@ public class NodeReturn implements Node{
     private boolean alreadyChecked = false;
     private NodeBlock parentBlock;
 
-    public NodeReturn(Token returnTok, Node expression) {
+    public NodeReturn(Token returnTok, Node expression, NodeBlock parentBlock) {
         this.returnTok = returnTok;
         this.expression = expression;
+        this.parentBlock = parentBlock;
     }
 
     @Override
@@ -25,7 +26,7 @@ public class NodeReturn implements Node{
         if (alreadyChecked){
             return;
         }
-        //if im in the constructor method then i dont need to check for return
+        //if im in the constructor method then I don't need to check for return
         if (parentBlock.currentMethod == parentBlock.currentClass.constructor){
             if (expression != null){
                 expression.check(symbolTable);
