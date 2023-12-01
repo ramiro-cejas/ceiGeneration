@@ -343,6 +343,9 @@ public class SymbolTable {
         for (ConcreteClass c : classes.values()){
             c.generate(codeGenerator);
         }
+        for (ConcreteClass c : interfaces.values()){
+            c.assignOffset(codeGenerator);
+        }
 
         codeGenerator.closeFile();
     }

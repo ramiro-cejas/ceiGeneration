@@ -37,17 +37,17 @@ PUSH Constructor@Animal # We put the constructor's tag on top of the stack
 CALL # We make the call
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
 PUSH 0
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-while_2: NOP
-LOAD -1 # We get the variable from the stack through its offset
+STORE -1 # We store what's on top of the pile in the stack through localvar's offset
+while_8: NOP
+LOAD -1 # We get the variable i is 2 from the stack through its offset
 PUSH 3
 LT
-BF end_while_2
+BF end_while_8
 RMEM 2 # Reserving space for block local vars
-LOAD -1 # We get the variable from the stack through its offset
+LOAD -1 # We get the variable i is 2 from the stack through its offset
 PUSH 0
 EQ
-BF else_if_3
+BF else_if_9
 RMEM 2 # Reserving space for block local vars
 RMEM 1 # We reserve a memory cell to store the pointer to the constructed object
 PUSH 1 # We load malloc's parameter: the number of cells to reserve for the constructed object
@@ -59,14 +59,16 @@ STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constr
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
 PUSH Constructor@Cat # We put the constructor's tag on top of the stack
 CALL # We make the call
+DUP # duplicating the value to be assigned
 STORE 0 # We write into the variable in the stack, through its offset
+POP # Discarding not used return value
 FMEM 2 # Freeing space reserved for block local vars
-JUMP out_if_3
-else_if_3: NOP
-LOAD -1 # We get the variable from the stack through its offset
+JUMP out_if_9
+else_if_9: NOP
+LOAD -1 # We get the variable i is 2 from the stack through its offset
 PUSH 1
 EQ
-BF else_if_4
+BF else_if_10
 RMEM 2 # Reserving space for block local vars
 RMEM 1 # We reserve a memory cell to store the pointer to the constructed object
 PUSH 1 # We load malloc's parameter: the number of cells to reserve for the constructed object
@@ -78,10 +80,12 @@ STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constr
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
 PUSH Constructor@Dog # We put the constructor's tag on top of the stack
 CALL # We make the call
+DUP # duplicating the value to be assigned
 STORE 0 # We write into the variable in the stack, through its offset
+POP # Discarding not used return value
 FMEM 2 # Freeing space reserved for block local vars
-JUMP out_if_4
-else_if_4: NOP
+JUMP out_if_10
+else_if_10: NOP
 RMEM 2 # Reserving space for block local vars
 RMEM 1 # We reserve a memory cell to store the pointer to the constructed object
 PUSH 1 # We load malloc's parameter: the number of cells to reserve for the constructed object
@@ -93,25 +97,30 @@ STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constr
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
 PUSH Constructor@Cow # We put the constructor's tag on top of the stack
 CALL # We make the call
+DUP # duplicating the value to be assigned
 STORE 0 # We write into the variable in the stack, through its offset
+POP # Discarding not used return value
 FMEM 2 # Freeing space reserved for block local vars
-out_if_4: NOP
-out_if_3: NOP
-LOAD 0 # We get the variable from the stack through its offset
-LOAD 3 # We load the 'this' reference
+out_if_10: NOP
+out_if_9: NOP
+LOAD 0 # We get the variable animal is 2 from the stack through its offset
+RMEM 1 # We reserve a memory cell for the method's return value
+SWAP  # We swap to keep the 'this' reference at the top of the stack
 DUP # We duplicate the 'this' reference so we don't lose it when it's used by LOADREF
 LOADREF 0 # We load the VTable (VTable offset is always 0)
 LOADREF 0 # We load the method's address through the VTable.
 CALL # We make the call.
 PUSH Method_printSln@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD -1 # We get the variable from the stack through its offset
+LOAD -1 # We get the variable i is 2 from the stack through its offset
 PUSH 1
 ADD
+DUP # duplicating the value to be assigned
 STORE -1 # We write into the variable in the stack, through its offset
+POP # Discarding not used return value
 FMEM 2 # Freeing space reserved for block local vars
-JUMP while_2
-end_while_2: NOP
+JUMP while_8
+end_while_8: NOP
 FMEM 2 # Freeing space reserved for block local vars
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
@@ -130,10 +139,8 @@ VT@Animal: DW Method_sound@Animal
 Method_sound@Animal: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-STOREFP # On return: We point FP to caller's AR
-RET 1 # On return: We free up memory cells equal to number of params [+1 if unit is dynamic]
 .DATA
-str_2: DW " ",0
+str_5: DW " ",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -143,7 +150,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_2 # We put the String tag at the top of the stack
+PUSH str_5 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR
@@ -165,10 +172,8 @@ VT@Cat: DW Method_sound@Cat,Method_playWithYarn@Cat
 Method_sound@Cat: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-STOREFP # On return: We point FP to caller's AR
-RET 1 # On return: We free up memory cells equal to number of params [+1 if unit is dynamic]
 .DATA
-str_3: DW "meow",0
+str_6: DW "meow",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -178,7 +183,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_3 # We put the String tag at the top of the stack
+PUSH str_6 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR
@@ -226,10 +231,8 @@ VT@Cow: DW Method_sound@Cow,Method_waveTail@Cow,Method_eatGrass@Cow
 Method_sound@Cow: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-STOREFP # On return: We point FP to caller's AR
-RET 1 # On return: We free up memory cells equal to number of params [+1 if unit is dynamic]
 .DATA
-str_4: DW "moo",0
+str_7: DW "moo",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -239,7 +242,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_4 # We put the String tag at the top of the stack
+PUSH str_7 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR
@@ -287,10 +290,8 @@ VT@Dog: DW Method_sound@Dog,Method_runAfterMailman@Dog,Method_nap@Dog
 Method_sound@Dog: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-STOREFP # On return: We point FP to caller's AR
-RET 1 # On return: We free up memory cells equal to number of params [+1 if unit is dynamic]
 .DATA
-str_5: DW "woof",0
+str_8: DW "woof",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -300,7 +301,7 @@ DUP # We duplicate malloc's return so we don't lose it on our next instr.
 PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_5 # We put the String tag at the top of the stack
+PUSH str_8 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR

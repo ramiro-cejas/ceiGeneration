@@ -5,7 +5,6 @@ interface Animal {
 
 class Cat implements Animal {
     void playWithYarn() {}
-
     String sound() {
         return "meow";
     }

@@ -45,6 +45,7 @@ PUSH 1234
 SWAP  # We swap to keep the 'this' reference at the top of the stack
 PUSH Constructor@A # We put the constructor's tag on top of the stack
 CALL # We make the call
+POP # Discarding not used return value
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 

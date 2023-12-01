@@ -1,7 +1,6 @@
 ///1&2&exitosamente
 class A {
     int x;
-
     public A(int init) {
         x = init;
     }

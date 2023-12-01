@@ -14,6 +14,7 @@ public class NodeAssignment implements Node{
     public NodeBlock parentBlock;
     public Token type;
     public boolean alreadyChecked = false;
+    public boolean isLeftSideOfAnAssignment = false;
 
     public NodeAssignment(Token sign, Node leftExpression, Node rightExpression, NodeBlock parentBlock) {
         this.sign = sign;
@@ -24,7 +25,7 @@ public class NodeAssignment implements Node{
 
     @Override
     public void check(SymbolTable symbolTable) throws SemanticException {
-        System.out.println("Checking assignment");
+        //System.out.println("Checking assignment");
         if (!alreadyChecked){
             leftExpression.check(symbolTable);
             rightExpression.check(symbolTable);
@@ -33,25 +34,26 @@ public class NodeAssignment implements Node{
             }
             if (rightExpression.getType().getLexeme().equals("void"))
                 symbolTable.semExceptionHandler.show(new SemanticException(sign, "Cannot assign void to a variable"));
+
             //if le right side conform to the left side then it's ok
-            if (!leftExpression.getType().getName().equals(rightExpression.getType().getName())){
-                symbolTable.semExceptionHandler.show(new SemanticException(sign, "Cannot assign " + rightExpression.getType().getLexeme() + " to " + leftExpression.getType().getLexeme()));
+            if (!leftExpression.getType().getName().equals("idClass")){
+                if (!leftExpression.getType().getName().equals(rightExpression.getType().getName()))
+                    symbolTable.semExceptionHandler.show(new SemanticException(sign, "Cannot assign " + rightExpression.getType().getLexeme() + " to " + leftExpression.getType().getLexeme()));
             } else {
                 //check if the left side type is a subtype of the type on the left side
-                if (leftExpression.getType().getName().equals("idClass")){
-                    // get the concrete class of the left side
-                    ConcreteClass leftClass = symbolTable.classes.get(leftExpression.getType().getLexeme());
-                    if (leftClass == null){
-                        leftClass = symbolTable.interfaces.get(leftExpression.getType().getLexeme());
-                    }
-                    // get the concrete class of the right side
-                    ConcreteClass rightClass = symbolTable.classes.get(rightExpression.getType().getLexeme());
-                    if (rightClass == null){
-                        rightClass = symbolTable.interfaces.get(rightExpression.getType().getLexeme());
-                    }
-                    if (!rightClass.isSubTypeOf(leftClass)){
-                        symbolTable.semExceptionHandler.show(new SemanticException(sign, "Cannot assign " + rightExpression.getType().getLexeme() + " to " + leftExpression.getType().getLexeme()));
-                    }
+
+                // get the concrete class of the left side
+                ConcreteClass leftClass = symbolTable.classes.get(leftExpression.getType().getLexeme());
+                if (leftClass == null){
+                    leftClass = symbolTable.interfaces.get(leftExpression.getType().getLexeme());
+                }
+                // get the concrete class of the right side
+                ConcreteClass rightClass = symbolTable.classes.get(rightExpression.getType().getLexeme());
+                if (rightClass == null){
+                    rightClass = symbolTable.interfaces.get(rightExpression.getType().getLexeme());
+                }
+                if (!rightExpression.getType().getLexeme().equals("null") && !rightClass.isSubTypeOf(leftClass)){
+                    symbolTable.semExceptionHandler.show(new SemanticException(sign, "Cannot assign " + rightExpression.getType().getLexeme() + " to " + leftExpression.getType().getLexeme()));
                 }
             }
 
@@ -78,10 +80,10 @@ public class NodeAssignment implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating assignment");
+        //System.out.println("Generating assignment");
         rightExpression.generate(codeGenerator);
+        codeGenerator.gen("DUP # duplicating the value to be assigned");
         leftExpression.generate(codeGenerator);
-        // TODO posible DUP para a = b = 3;
     }
 
     @Override
@@ -97,6 +99,6 @@ public class NodeAssignment implements Node{
 
     @Override
     public void setIsInLeftSideOfAnAssignment() {
-        //do nothing
+        isLeftSideOfAnAssignment = true;
     }
 }

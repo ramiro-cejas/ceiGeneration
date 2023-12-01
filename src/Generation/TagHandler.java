@@ -52,4 +52,8 @@ public class TagHandler {
         sentenceID++;
         return toReturn;
     }
+
+    public static String getInterfaceTag(ConcreteClass concreteClass) {
+        return "Interface@" + concreteClass.name.getLexeme();
+    }
 }

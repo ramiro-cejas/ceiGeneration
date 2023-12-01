@@ -25,7 +25,7 @@ VT@A: DW Method_m1@A,Method_m2@A
 Method_m1@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-LOAD 4 # We get the variable from the stack through its offset
+LOAD 4 # We get the variable p1 is 1 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
 STOREFP # We point FP to caller's AR
@@ -35,8 +35,6 @@ RET 2 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Method_m2@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-STOREFP # On return: We point FP to caller's AR
-RET 1 # On return: We free up memory cells equal to number of params [+1 if unit is dynamic]
 PUSH 33
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR
@@ -69,14 +67,17 @@ DUP # We duplicate malloc's return and we use it as the 'this' reference for the
 PUSH Constructor@A # We put the constructor's tag on top of the stack
 CALL # We make the call
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
-LOAD 3 # We load the 'this' reference
+LOAD 0 # We get the variable x is 2 from the stack through its offset
+RMEM 1 # We reserve a memory cell for the method's return value
+SWAP  # We swap to keep the 'this' reference at the top of the stack
 DUP # We duplicate the 'this' reference so we don't lose it when it's used by LOADREF
 LOADREF 0 # We load the VTable (VTable offset is always 0)
 LOADREF 1 # We load the method's address through the VTable.
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
-LOAD 3 # We load the 'this' reference
+POP # Discarding not used return value
+LOAD 0 # We get the variable x is 2 from the stack through its offset
+RMEM 1 # We reserve a memory cell for the method's return value
+SWAP  # We swap to keep the 'this' reference at the top of the stack
 DUP # We duplicate the 'this' reference so we don't lose it when it's used by LOADREF
 LOADREF 0 # We load the VTable (VTable offset is always 0)
 LOADREF 1 # We load the method's address through the VTable.

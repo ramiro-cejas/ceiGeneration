@@ -57,36 +57,40 @@ LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 RMEM 2 # Reserving space for block local vars
 PUSH 1
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
+STORE -2 # We store what's on top of the pile in the stack through localvar's offset
 PUSH 0
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
+STORE -3 # We store what's on top of the pile in the stack through localvar's offset
 while_8: NOP
-LOAD 0 # We get the variable from the stack through its offset
-LOAD 3 # We get the variable from the stack through its offset
+LOAD -2 # We get the variable count is 2 from the stack through its offset
+LOAD 3 # We get the variable n is 1 from the stack through its offset
 LT
 BF end_while_8
 RMEM 2 # Reserving space for block local vars
-LOAD 3 # We get the variable from the stack through its offset
-LOAD 0 # We get the variable from the stack through its offset
+LOAD 3 # We get the variable n is 1 from the stack through its offset
+LOAD -4 # We get the variable count is 2 from the stack through its offset
 MOD
 PUSH 0
 EQ
 BF out_if_9
 RMEM 2 # Reserving space for block local vars
-LOAD -1 # We get the variable from the stack through its offset
+LOAD -5 # We get the variable divisores is 2 from the stack through its offset
 PUSH 1
 ADD
-STORE -1 # We write into the variable in the stack, through its offset
+DUP # duplicating the value to be assigned
+STORE -5 # We write into the variable in the stack, through its offset
+POP # Discarding not used return value
 FMEM 2 # Freeing space reserved for block local vars
 out_if_9: NOP
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -4 # We get the variable count is 2 from the stack through its offset
 PUSH 1
 ADD
-STORE 0 # We write into the variable in the stack, through its offset
+DUP # duplicating the value to be assigned
+STORE -4 # We write into the variable in the stack, through its offset
+POP # Discarding not used return value
 FMEM 2 # Freeing space reserved for block local vars
 JUMP while_8
 end_while_8: NOP
-LOAD -1 # We get the variable from the stack through its offset
+LOAD -5 # We get the variable divisores is 2 from the stack through its offset
 PUSH 2
 GT
 BF else_if_10
@@ -106,7 +110,7 @@ PUSH str_8 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 PUSH Method_printS@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 3 # We get the variable from the stack through its offset
+LOAD 3 # We get the variable n is 1 from the stack through its offset
 PUSH Method_printI@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
 .DATA
@@ -143,7 +147,7 @@ PUSH str_10 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 PUSH Method_printS@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 3 # We get the variable from the stack through its offset
+LOAD 3 # We get the variable n is 1 from the stack through its offset
 PUSH Method_printI@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
 .DATA

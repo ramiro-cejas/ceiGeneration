@@ -61,11 +61,7 @@ public class NodeBinaryOp extends NodeExpression{
                         }
                         type = new Token("keyword_boolean", "boolean", operator.getRow());
                     } else {
-                        if (symbolTable.classes.get(rightType.getLexeme()).isSubTypeOf(symbolTable.classes.get(leftType.getLexeme()))){
-                            type = new Token("keyword_boolean", "boolean", operator.getRow());
-                        } else {
-                            symbolTable.semExceptionHandler.show(new SemanticException(operator,"Binary operation between different types"));
-                        }
+                        type = new Token("keyword_boolean", "boolean", operator.getRow());
                     }
                 } else {
                     //if the operator is < > <= >= only int and float are allowed (check with the lexeme of the token)

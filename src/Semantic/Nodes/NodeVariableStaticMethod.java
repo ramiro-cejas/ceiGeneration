@@ -34,7 +34,8 @@ public class NodeVariableStaticMethod extends NodeVariable{
                     for (int i = 0; i < parameters.size(); i++){
                         parameters.get(i).check(symbolTable);
                         if (!parameters.get(i).getType().getLexeme().equals(methodToMatch.parametersInOrder.get(i).getType().getLexeme())){
-                            symbolTable.semExceptionHandler.show(new SemanticException(name,"Static method " + name.getLexeme() + " is not defined in class " + className.getLexeme() + " with the given parameters"));
+                            System.out.println("Static method " + name.getLexeme() + " is not defined in class " + className.getLexeme() + " with the parameter " + parameters.get(i).getType().getLexeme());
+                            //symbolTable.semExceptionHandler.show(new SemanticException(name,"Static method " + name.getLexeme() + " is not defined in class " + className.getLexeme() + " with the given parameters"));
                         }
                     }
                     type = methodToMatch.type;
@@ -72,5 +73,9 @@ public class NodeVariableStaticMethod extends NodeVariable{
 
         String cCall = " # We make the call.";
         codeGenerator.gen("CALL" + cCall);
+
+        if (childChain != null){
+            childChain.generate(codeGenerator);
+        }
     }
 }

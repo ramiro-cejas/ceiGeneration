@@ -45,7 +45,7 @@ DUP # We duplicate malloc's return and we use it as the 'this' reference for the
 PUSH Constructor@String # We put the constructor's tag on top of the stack
 CALL # We make the call
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
+LOAD 0 # We get the variable s is 2 from the stack through its offset
 PUSH Method_printSln@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
 FMEM 1 # Freeing space reserved for block local vars

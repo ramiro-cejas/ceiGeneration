@@ -69,26 +69,26 @@ STOREFP # We signal the AR being built as the current AR
 RMEM 5 # Reserving space for block local vars
 PUSH 2
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
+LOAD 0 # We get the variable i is 2 from the stack through its offset
 NEG
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
+STORE -1 # We store what's on top of the pile in the stack through localvar's offset
+LOAD -1 # We get the variable neg1 is 2 from the stack through its offset
 NEG
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
+STORE -2 # We store what's on top of the pile in the stack through localvar's offset
+LOAD 0 # We get the variable i is 2 from the stack through its offset
+STORE -3 # We store what's on top of the pile in the stack through localvar's offset
+LOAD -1 # We get the variable neg1 is 2 from the stack through its offset
+STORE -4 # We store what's on top of the pile in the stack through localvar's offset
+LOAD -1 # We get the variable neg1 is 2 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -2 # We get the variable neg2 is 2 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -3 # We get the variable nop1 is 2 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -4 # We get the variable nop2 is 2 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
 FMEM 5 # Freeing space reserved for block local vars
@@ -107,32 +107,32 @@ STORE 0 # We store what's on top of the pile in the stack through localvar's off
 PUSH 2
 PUSH 2
 SUB
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
+STORE -1 # We store what's on top of the pile in the stack through localvar's offset
 PUSH 2
 PUSH 2
 MUL
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
+STORE -2 # We store what's on top of the pile in the stack through localvar's offset
 PUSH 2
 PUSH 2
 DIV
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
+STORE -3 # We store what's on top of the pile in the stack through localvar's offset
 PUSH 2
 PUSH 2
 MOD
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
+STORE -4 # We store what's on top of the pile in the stack through localvar's offset
+LOAD 0 # We get the variable add is 2 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -1 # We get the variable sub is 2 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -2 # We get the variable mul is 2 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -3 # We get the variable div is 2 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -4 # We get the variable mod is 2 from the stack through its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
 FMEM 5 # Freeing space reserved for block local vars

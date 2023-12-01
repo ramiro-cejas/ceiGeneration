@@ -2,7 +2,7 @@
 class C {
     int x;
     public C() {
-        this.x = 0;
+        x = 0;
     }
     int xCollateral() {
         x = x + 1;

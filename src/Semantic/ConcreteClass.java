@@ -24,7 +24,7 @@ public class ConcreteClass{
     private boolean consolidated = false;
     public HashMap<String, ConcreteAttribute> hiddenAttributes = new HashMap<>();
     public int nextMethodOffset = 0;
-    public int nextAttributeOffset = 0;
+    public int nextAttributeOffset = 1;
 
     public ConcreteClass(Token token, SymbolTable symbolTable) {
         this.name = token;
@@ -145,8 +145,9 @@ public class ConcreteClass{
         }
 
         if(implementsName.getLexeme().equals("-")){
-            if (!extendsName.getLexeme().equals("$"))
+            if (!extendsName.getLexeme().equals("$")){
                 nextMethodOffset = symbolTable.classes.get(extendsName.getLexeme()).getNextMethodOffset();
+            }
         } else {
             ConcreteClass implementedInterface = symbolTable.interfaces.get(implementsName.getLexeme());
             nextMethodOffset = implementedInterface.getNextMethodOffset();
@@ -186,10 +187,6 @@ public class ConcreteClass{
             System.out.println("Attribute: " + attribute.name.getLexeme() + " Offset: " + attribute.getOffset() + " declared in class " + attribute.originalClass.name.getLexeme());
         }
 
-        //now we assign offset to the local variables of every method
-        for (ConcreteMethod m : methods.values()){
-            m.methodBlock.assignOffsets();
-        }
     }
 
     private int getNextAttributeOffset() {
@@ -422,16 +419,32 @@ public class ConcreteClass{
             if (m.getOriginalClass() == this && m.isStatic.getLexeme().equals("static"))
                 m.generateMethod(codeGenerator);
         }
-
-        //TODO: hasta ahora pude acomodar que los metodos dinamicos sobreescriban
-        // lo que corresponda en la vtable, la generacion y accesos de metodos estaticos funciona
-        // correctamente, al igual que los literales,
-        // verificar los constructores y los accesos y hacer RETURN
-        
     }
 
     private void generateConstructor(CodeGenerator codeGenerator) throws CompiException {
         constructor.generateConstructor(codeGenerator);
     }
 
+    public void assignOffset(CodeGenerator codeGenerator) {
+        int nextOffset = 0;
+        if(implementsName.equals("-")){
+            nextOffset = 0;
+        } else {
+            ConcreteClass implementedInterface = symbolTable.interfaces.get(implementsName.getLexeme());
+            nextOffset = implementedInterface.getNextMethodOffset();
+        }
+
+        for (ConcreteMethod m : methods.values()){
+            boolean isRedefined = m.isRedefined();
+            boolean isInherited = m.originalClass != this;
+            boolean needsOffset = !(isRedefined || isInherited);
+
+            if(needsOffset) {
+                m.setOffset(nextOffset);
+                nextOffset++;
+            }
+        }
+
+        nextMethodOffset = nextOffset;
+    }
 }

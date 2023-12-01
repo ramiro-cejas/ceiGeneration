@@ -25,10 +25,8 @@ VT@A: DW Method_getX@A,Method_setX@A,Method_printX@A
 Method_getX@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-STOREFP # On return: We point FP to caller's AR
-RET 1 # On return: We free up memory cells equal to number of params [+1 if unit is dynamic]
 LOAD 3 # Accessing a dynamic attribute, we put a reference to 'this' at the top of the stack.
-LOADREF 0 # We get the variable from the heap through the 'this' reference and its offset
+LOADREF 1 # We get the variable from the heap through the 'this' reference and its offset
 STORE 4 # We save the return value in the space reserved for it
 STOREFP # On return: We point FP to caller's AR
 RET 1 # On return: We free up memory cells equal to number of params [+1 if unit is dynamic]
@@ -39,10 +37,12 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Method_setX@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-LOAD 4 # We get the variable from the stack through its offset
+LOAD 4 # We get the variable newX is 1 from the stack through its offset
+DUP # duplicating the value to be assigned
 LOAD 3 # Accessing a dynamic attribute, we put a reference to 'this' at the top of the stack.
 SWAP # We swap the 'this' reference and what we desire to write into the attribute
-STOREREF 0 # We write into the heap through the 'this' reference and the offset
+STOREREF 1 # We write into the heap through the 'this' reference and the offset
+POP # Discarding not used return value
 STOREFP # We point FP to caller's AR
 RET 2 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 
@@ -51,7 +51,7 @@ Method_printX@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 LOAD 3 # Accessing a dynamic attribute, we put a reference to 'this' at the top of the stack.
-LOADREF 0 # We get the variable from the heap through the 'this' reference and its offset
+LOADREF 1 # We get the variable from the heap through the 'this' reference and its offset
 PUSH Method_debugPrint@Object # We push the static method's tag to the top of the stack
 CALL # We make the call.
 STOREFP # We point FP to caller's AR
@@ -61,10 +61,12 @@ RET 1 # We free up memory cells equal to number of params [+1 if unit is dynamic
 Constructor@A: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-LOAD 0 # We get the variable from the stack through its offset
+LOAD 4 # We get the variable init is 1 from the stack through its offset
+DUP # duplicating the value to be assigned
 LOAD 3 # Accessing a dynamic attribute, we put a reference to 'this' at the top of the stack.
 SWAP # We swap the 'this' reference and what we desire to write into the attribute
-STOREREF 0 # We write into the heap through the 'this' reference and the offset
+STOREREF 1 # We write into the heap through the 'this' reference and the offset
+POP # Discarding not used return value
 STOREFP # We point FP to caller's AR
 RET 2 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 .DATA
@@ -119,22 +121,19 @@ SWAP  # We swap to keep the 'this' reference at the top of the stack
 PUSH Constructor@A # We put the constructor's tag on top of the stack
 CALL # We make the call
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
-LOAD 3 # We load the 'this' reference
+LOAD 0 # We get the variable a is 2 from the stack through its offset
 DUP # We duplicate the 'this' reference so we don't lose it when it's used by LOADREF
 LOADREF 0 # We load the VTable (VTable offset is always 0)
 LOADREF 2 # We load the method's address through the VTable.
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
-LOAD 3 # We load the 'this' reference
+LOAD 0 # We get the variable a is 2 from the stack through its offset
 PUSH 2
 SWAP  # We swap to keep the 'this' reference at the top of the stack
 DUP # We duplicate the 'this' reference so we don't lose it when it's used by LOADREF
 LOADREF 0 # We load the VTable (VTable offset is always 0)
 LOADREF 1 # We load the method's address through the VTable.
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
-LOAD 3 # We load the 'this' reference
+LOAD 0 # We get the variable a is 2 from the stack through its offset
 DUP # We duplicate the 'this' reference so we don't lose it when it's used by LOADREF
 LOADREF 0 # We load the VTable (VTable offset is always 0)
 LOADREF 2 # We load the method's address through the VTable.

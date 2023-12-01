@@ -36,22 +36,22 @@ STOREFP # We signal the AR being built as the current AR
 RMEM 1 # Reserving space for block local vars
 PUSH 1
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-while_14: NOP
-LOAD 0 # We get the variable from the stack through its offset
+while_7: NOP
+LOAD -1 # We get the variable count is 2 from the stack through its offset
 PUSH 10
 LE
-BF end_while_14
+BF end_while_7
 RMEM 1 # Reserving space for block local vars
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -1 # We get the variable count is 2 from the stack through its offset
 PUSH Method_printIln@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
-LOAD 0 # We get the variable from the stack through its offset
+LOAD -1 # We get the variable count is 2 from the stack through its offset
 PUSH 1
 ADD
-STORE 0 # We write into the variable in the stack, through its offset
+STORE -1 # We write into the variable in the stack, through its offset
 FMEM 1 # Freeing space reserved for block local vars
-JUMP while_14
-end_while_14: NOP
+JUMP while_7
+end_while_7: NOP
 FMEM 1 # Freeing space reserved for block local vars
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]

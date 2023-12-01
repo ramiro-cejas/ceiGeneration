@@ -10,6 +10,7 @@ public class ConcreteAttribute {
     ConcreteClass originalClass;
     int offset;
     public int variableType = 0;
+    boolean alreadySetted = false;
 
     public static final int ATTRIBUTE = 0;
     public static final int PARAMETER = 1;
@@ -42,7 +43,10 @@ public class ConcreteAttribute {
     }
 
     public void setOffset(int newOffset) {
-        this.offset = newOffset;
+        if (!alreadySetted){
+            this.offset = newOffset;
+            alreadySetted = true;
+        }
     }
 
     public int getOffset() {

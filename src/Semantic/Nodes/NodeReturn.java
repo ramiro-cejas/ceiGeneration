@@ -97,11 +97,11 @@ public class NodeReturn implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating return TODO");
+        System.out.println("Generating return");
         //TODO
         // si tengo retorno void o es un constructor entonces solo hago salida
         // sino hago retorno y luego salida
-        if (parentBlock.currentMethod.type.getLexeme().equals("void") || parentBlock.currentMethod == parentBlock.currentClass.constructor){
+        if (parentBlock.currentMethod.type.getName().equals("keyword_void") || parentBlock.currentMethod == parentBlock.currentClass.constructor){
             generateExit(codeGenerator);
         } else {
             generateReturn(codeGenerator);
@@ -110,7 +110,7 @@ public class NodeReturn implements Node{
 
     }
 
-    private void generateExit(CodeGenerator codeGenerator) throws CompiException {
+    private void generateReturn(CodeGenerator codeGenerator) throws CompiException {
         int parameterCount = parentBlock.methodParameters.size();
         int dynamicBonus = parentBlock.currentMethod.isStatic.getName().equals("keyword_static") ? 0 : 1;
 
@@ -120,11 +120,9 @@ public class NodeReturn implements Node{
 
         String cReturn = " # We save the return value in the space reserved for it";
         codeGenerator.gen("STORE " + returnCellOffset + cReturn);
-
-        generateReturn(codeGenerator);
     }
 
-    private void generateReturn(CodeGenerator codeGenerator) throws CompiException {
+    private void generateExit(CodeGenerator codeGenerator) throws CompiException {
         int parentBlockLastOffset = parentBlock.getOffset();
         int localVarCount = -parentBlockLastOffset;
 

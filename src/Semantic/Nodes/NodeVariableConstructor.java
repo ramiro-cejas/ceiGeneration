@@ -64,7 +64,7 @@ public class NodeVariableConstructor extends NodeVariable{
 
         int instanceVariableCounter = 0;
         for(ConcreteAttribute attribute : classConstructed.attributes.values()) {
-            if(!attribute.isStatic.getLexeme().equals("keyword_static"))
+            if(!attribute.isStatic.getName().equals("keyword_static"))
                 instanceVariableCounter++;
         }
         int vTableSpace = 1;
@@ -121,5 +121,9 @@ public class NodeVariableConstructor extends NodeVariable{
 
         String c11 = " # We make the call";
         codeGenerator.gen("CALL" + c11);
+
+        if (childChain != null){
+            childChain.generate(codeGenerator);
+        }
     }
 }

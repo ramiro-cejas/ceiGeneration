@@ -36,9 +36,11 @@ Method_m@Init: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 PUSH 4
+DUP # duplicating the value to be assigned
 PUSH Attribute_x@Init # We put the static attribute's tag at the top of the stack
 SWAP # We swap the tag and what we desire to write into the attribute
 STOREREF 0 # We write into the data through the tag
+POP # Discarding not used return value
 PUSH Attribute_x@Init # We put the static attribute's tag at the top of the stack
 LOADREF 0 # We read the attributes value from the data using the tag
 PUSH Method_printIln@System # We push the static method's tag to the top of the stack

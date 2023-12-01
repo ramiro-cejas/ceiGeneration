@@ -65,6 +65,7 @@ Method_main@Main: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 PUSH 1
+DUP # duplicating the value to be assigned
 RMEM 1 # We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # We load malloc's parameter: the number of cells to reserve for the constructed object
 PUSH malloc # We put malloc's tag on top of the stack
@@ -75,6 +76,9 @@ STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constr
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
 PUSH Constructor@A # We put the constructor's tag on top of the stack
 CALL # We make the call
+SWAP # We swap the 'this' reference and what we desire to write into the attribute
+STOREREF 1 # We write into the heap through the 'this' reference and the offset
+POP # Discarding not used return value
 STOREFP # We point FP to caller's AR
 RET 0 # We free up memory cells equal to number of params [+1 if unit is dynamic]
 

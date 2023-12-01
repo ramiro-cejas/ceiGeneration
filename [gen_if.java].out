@@ -27,7 +27,7 @@ STOREFP # We signal the AR being built as the current AR
 RMEM 1 # Reserving space for block local vars
 PUSH 2
 STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
+LOAD 0 # We get the variable x is 2 from the stack through its offset
 PUSH 0
 GT
 BF out_if_0

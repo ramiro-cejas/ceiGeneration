@@ -17,7 +17,6 @@ public class NodeVarDeclaration implements Node{
     public NodeVarDeclaration(Token id, Node expression, NodeBlock parentBlock) {
         this.variable = new ConcreteAttribute(id, type, new Token("", "", -1));
         variable.variableType = ConcreteAttribute.LOCAL_VARIABLE;
-        parentBlock.addLocalVariable(variable);
         this.id = id;
         this.expression = expression;
         this.parentBlock = parentBlock;
@@ -38,12 +37,22 @@ public class NodeVarDeclaration implements Node{
                 symbolTable.semExceptionHandler.show(new SemanticException(id, "Cannot assign void to a variable"));
 
             //check if already exists a local variable or a parameter with the same name
-            if (parentBlock.localVariables.stream().anyMatch(x -> x.getName().getLexeme().equals(id.getLexeme())) || parentBlock.methodParameters.stream().anyMatch(x -> x.getName().getLexeme().equals(id.getLexeme()))){
-                throw new SemanticException(id,"Variable " + id.getLexeme() + " already declared");
+
+            for (ConcreteAttribute localVariable : parentBlock.localVariables) {
+                if (localVariable.getName().getLexeme().equals(id.getLexeme())){
+                    throw new SemanticException(id,"Variable " + id.getLexeme() + " already declared");
+                }
+            }
+            for (ConcreteAttribute parameter : parentBlock.methodParameters) {
+                if (parameter.getName().getLexeme().equals(id.getLexeme())){
+                    throw new SemanticException(id,"Parameter " + id.getLexeme() + " already declared");
+                }
             }
             ConcreteAttribute toAdd = new ConcreteAttribute(id, type, new Token("", "", -1));
             toAdd.variableType = ConcreteAttribute.LOCAL_VARIABLE;
+            System.out.println("Adding local variable " + toAdd.getName().getLexeme() + " to block " + parentBlock);
             parentBlock.localVariables.add(toAdd);
+            variable = toAdd;
         }
         alreadyChecked = true;
     }
@@ -73,12 +82,12 @@ public class NodeVarDeclaration implements Node{
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
         System.out.println("Generating var declaration");
-        //TODO -ing
+
         expression.generate(codeGenerator);
 
         int offset = variable.getOffset();
 
-        System.out.println("Offset of " + id.getLexeme() + " is " + offset);
+        System.out.println("in var decl Offset of " + id.getLexeme() + " is " + offset);
 
         String c = " # We store what's on top of the pile in the stack through localvar's offset";
         codeGenerator.gen("STORE " + offset + c);

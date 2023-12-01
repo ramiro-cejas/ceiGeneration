@@ -42,5 +42,8 @@ public class NodeParenthesis extends NodeVariable{
     public void generate(CodeGenerator codeGenerator) throws CompiException {
         System.out.println("Generating parenthesis");
         expression.generate(codeGenerator);
+        if (childChain != null){
+            childChain.generate(codeGenerator);
+        }
     }
 }

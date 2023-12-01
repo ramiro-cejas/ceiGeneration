@@ -24,7 +24,7 @@ VT@Init: NOP # This class doesnt have any dynamic methods
 Method_m2@Init: LOADFP # We store the dynamic link
 LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
-LOAD 3 # We get the variable from the stack through its offset
+LOAD 3 # We get the variable s is 1 from the stack through its offset
 PUSH Method_printSln@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
 STOREFP # We point FP to caller's AR
@@ -45,7 +45,24 @@ LOADSP # We signal were the AR starts
 STOREFP # We signal the AR being built as the current AR
 RMEM 1 # Reserving space for block local vars
 .DATA
-str_14: DW "Hello World",0
+str_13: DW "Hello World",0
+.CODE
+RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
+PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
+PUSH malloc # We put malloc's tag on top of the stack
+CALL # We make the call
+DUP # We duplicate malloc's return so we don't lose it on our next instr.
+PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
+STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
+DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
+PUSH str_13 # We put the String tag at the top of the stack
+STOREREF 1 # We link the tag to the 'fake attribute'
+STORE 0 # We store what's on top of the pile in the stack through localvar's offset
+LOAD 0 # We get the variable s is 2 from the stack through its offset
+PUSH Method_printSln@System # We push the static method's tag to the top of the stack
+CALL # We make the call.
+.DATA
+str_14: DW "Hola Mundo!",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -57,12 +74,10 @@ STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constr
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
 PUSH str_14 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
-STORE 0 # We store what's on top of the pile in the stack through localvar's offset
-LOAD 0 # We get the variable from the stack through its offset
 PUSH Method_printSln@System # We push the static method's tag to the top of the stack
 CALL # We make the call.
 .DATA
-str_15: DW "Hola Mundo!",0
+str_15: DW "Bonjour monde",0
 .CODE
 RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
 PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
@@ -73,21 +88,6 @@ PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
 STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
 DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
 PUSH str_15 # We put the String tag at the top of the stack
-STOREREF 1 # We link the tag to the 'fake attribute'
-PUSH Method_printSln@System # We push the static method's tag to the top of the stack
-CALL # We make the call.
-.DATA
-str_16: DW "Bonjour monde",0
-.CODE
-RMEM 1 # In String Literal: We reserve a memory cell to store the pointer to the constructed object
-PUSH 2 # In String Literal: We load malloc's parameter (hardcoded)
-PUSH malloc # We put malloc's tag on top of the stack
-CALL # We make the call
-DUP # We duplicate malloc's return so we don't lose it on our next instr.
-PUSH VT@String # We push the VTable's tag so we can link it to the CIR.
-STOREREF 0 # We store the reference (tag) to the VTable in the CIR of the constructed object (the offset is hard-coded)
-DUP # We duplicate malloc's return and we use it as the 'this' reference for the constructor
-PUSH str_16 # We put the String tag at the top of the stack
 STOREREF 1 # We link the tag to the 'fake attribute'
 PUSH Method_m2@Init # We push the static method's tag to the top of the stack
 CALL # We make the call.

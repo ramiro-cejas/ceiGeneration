@@ -71,6 +71,8 @@ public class ConcreteMethod {
         // assign offsets to the parameters
         int staticBonus = isStatic.getName().equals("keyword_static") ? 0 : 1;
         int numberOfParameters = parametersInOrder.size();
+        System.out.println(" ############ Parametros en orden del metodo " + name.getLexeme() + " de la clase " + originalClass.name.getLexeme() + " ############");
+        System.out.println(" ############ " + parametersInOrder.size() + " ############ ");
         int minOffset = 3 + staticBonus;
         for(int i = 1; i <= numberOfParameters; i++) {
             int offset = numberOfParameters - i + minOffset;
@@ -83,6 +85,16 @@ public class ConcreteMethod {
     }
 
     public void generateConstructor(CodeGenerator codeGenerator) throws CompiException {
+        // assign offsets to the parameters
+        int staticBonus = isStatic.getName().equals("keyword_static") ? 0 : 1;
+        int numberOfParameters = parametersInOrder.size();
+        int minOffset = 3 + staticBonus;
+        for(int i = 1; i <= numberOfParameters; i++) {
+            int offset = numberOfParameters - i + minOffset;
+            int index = i-1;
+            parametersInOrder.get(index).setOffset(offset);
+        }
+
         String tag = TagHandler.getConstructorTag(this);
         generate(codeGenerator, tag);
     }
@@ -109,6 +121,8 @@ public class ConcreteMethod {
             codeGenerator.gen("LOAD " + i + " # We load the parameter " + parametersInOrder.get(i).name.getLexeme() + " to the top of the stack");
         }*/
 
+        methodBlock.methodParameters.clear();
+        methodBlock.methodParameters.addAll(parametersInOrder);
         methodBlock.generate(codeGenerator);
 
         String c4 = " # We point FP to caller's AR";
