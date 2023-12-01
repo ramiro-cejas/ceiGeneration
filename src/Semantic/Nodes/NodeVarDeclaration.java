@@ -50,7 +50,6 @@ public class NodeVarDeclaration implements Node{
             }
             ConcreteAttribute toAdd = new ConcreteAttribute(id, type, new Token("", "", -1));
             toAdd.variableType = ConcreteAttribute.LOCAL_VARIABLE;
-            System.out.println("Adding local variable " + toAdd.getName().getLexeme() + " to block " + parentBlock);
             parentBlock.localVariables.add(toAdd);
             variable = toAdd;
         }
@@ -81,13 +80,11 @@ public class NodeVarDeclaration implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating var declaration");
 
         expression.generate(codeGenerator);
 
         int offset = variable.getOffset();
 
-        System.out.println("in var decl Offset of " + id.getLexeme() + " is " + offset);
 
         String c = " # We store what's on top of the pile in the stack through localvar's offset";
         codeGenerator.gen("STORE " + offset + c);

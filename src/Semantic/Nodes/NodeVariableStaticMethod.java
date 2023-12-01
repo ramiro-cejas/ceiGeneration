@@ -18,14 +18,11 @@ public class NodeVariableStaticMethod extends NodeVariable{
     }
 
     public void check(SymbolTable symbolTable) throws SemanticException {
-        System.out.println("Checking static method access");
         if (alreadyChecked)
             return;
         //check if the class exist in the symboltable and check if that class has the static method
         if (symbolTable.classes.containsKey(className.getLexeme())){
-            System.out.println("Class " + className.getLexeme() + " exists");
             if (symbolTable.classes.get(className.getLexeme()).methods.containsKey(name.getLexeme())){
-                System.out.println("Static method " + name.getLexeme() + " exists");
                 //check if the parameters are the same
                 ConcreteMethod methodToMatch = symbolTable.classes.get(className.getLexeme()).methods.get(name.getLexeme());
                 if (methodToMatch.parameters.size() != parameters.size() || !methodToMatch.isStatic.getName().equals("keyword_static")){
@@ -70,7 +67,6 @@ public class NodeVariableStaticMethod extends NodeVariable{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating static method access");
         //si es distinto de void, reservar memoria para el return
         if(!methodToCall.type.getName().equals("keyword_void")) {
             String cRet = " # We reserve a memory cell for the method's return value";

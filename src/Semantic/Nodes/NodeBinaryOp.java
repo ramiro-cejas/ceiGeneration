@@ -94,7 +94,6 @@ public class NodeBinaryOp extends NodeExpression{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating binary operation " + operator.getLexeme());
         //first generate the code for the left expression
         leftExpression.generate(codeGenerator);
 

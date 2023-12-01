@@ -156,10 +156,6 @@ public class ConcreteClass{
             nextMethodOffset = implementedInterface.getNextMethodOffset();
         }
 
-        if (symbolTable.classes.containsKey(name.getLexeme()))
-            System.out.println("Offsets for class " + name.getLexeme() + ": ");
-        else
-            System.out.println("Offsets for interface " + name.getLexeme() + ": ");
         for(ConcreteMethod method : methods.values()) {
             boolean isStatic = method.isStatic.getLexeme().equals("static");
             boolean isRedefined = method.isRedefined();
@@ -168,7 +164,6 @@ public class ConcreteClass{
             if (!implementsName.getLexeme().equals("-")){
                 ConcreteClass interfaceToImpl = symbolTable.interfaces.get(implementsName.getLexeme());
                 if (interfaceToImpl.methods.containsKey(method.name.getLexeme())){
-                    System.out.println("Method is declared in interface " + implementsName.getLexeme());
                     isDeclaredInInterface = true;
                 }
             }
@@ -176,11 +171,9 @@ public class ConcreteClass{
             boolean needsOffset = !(isStatic || isRedefined || isInherited);
 
             if (isDeclaredInInterface){
-                System.out.println("Method declared in Interface: " + method.name.getLexeme() + " Offset: " + nextMethodOffset);
                 ConcreteMethod methodInInterface = symbolTable.interfaces.get(implementsName.getLexeme()).methods.get(method.name.getLexeme());
                 method.setOffset(methodInInterface.getOffset());
             } else if(needsOffset) {
-                System.out.println("Method: " + method.name.getLexeme() + " Offset: " + nextMethodOffset);
                 method.setOffset(nextMethodOffset);
                 nextMethodOffset++;
             }
@@ -190,7 +183,6 @@ public class ConcreteClass{
             nextAttributeOffset = parent.getNextAttributeOffset();
         }
 
-        System.out.println("///Offsets for attribute in class " + name.getLexeme() + ": ");
         for(ConcreteAttribute attribute : attributes.values()) {
             boolean isStatic = attribute.isStatic.getLexeme().equals("static");
             boolean isInherited = attribute.originalClass != this;
@@ -202,7 +194,6 @@ public class ConcreteClass{
                 nextAttributeOffset++;
             }
 
-            System.out.println("Attribute: " + attribute.name.getLexeme() + " Offset: " + attribute.getOffset() + " declared in class " + attribute.originalClass.name.getLexeme());
         }
 
     }
@@ -284,15 +275,12 @@ public class ConcreteClass{
             methodsInOrder.addAll(parent.methodsInOrder);
             //now we add the methods from the current class
             //if m is redefined then we need to replace the method in the list with the new one on the same position
-            System.out.println("=============\n");
             for (ConcreteMethod m : methods.values()){
                 if (!methodsInOrder.contains(m)) {
                     if (!m.isStatic.getLexeme().equals("static")){
                         if (!m.isRedefined){
-                            System.out.println("Adding method " + m.name.getLexeme() + " to the list of methods in order");
                             methodsInOrder.add(m);
                         } else {
-                            System.out.println("Replacing method " + m.name.getLexeme() + " in the list of methods in order");
                             ConcreteMethod toReplace = null;
                             for (ConcreteMethod m2 : methodsInOrder){
                                 if (m2.name.getLexeme().equals(m.name.getLexeme())){
@@ -307,12 +295,6 @@ public class ConcreteClass{
                     }
                 }
             }
-            System.out.println("--- Methods in order: " + methodsInOrder.size() + " for class " + name.getLexeme());
-            for (ConcreteMethod m : methodsInOrder){
-                System.out.print("Method: " + m.name.getLexeme() + " declared in the class " + m.originalClass.name.getLexeme() + " has offset " + m.getOffset());
-                System.out.println("");
-            }
-            System.out.println("=============");
         }
     }
 
@@ -364,9 +346,7 @@ public class ConcreteClass{
         int numberOfMethods = methodsInOrder.size();
         int numberOfDynamicMethods = 0;
         String[] tagsInOrder = new String[numberOfMethods];
-        System.out.println("Generating VTable for class " + name.getLexeme() + " with " + numberOfMethods + " methods");
         for(ConcreteMethod m : methodsInOrder) {
-            System.out.println("Method: " + m.name.getLexeme() + " is static: " + m.isStatic.getLexeme() + " offset: " + m.getOffset());
             if(!m.isStatic.getLexeme().equals("static")) {
                 int offset = m.getOffset();
                 tagsInOrder[offset] = TagHandler.getMethodTag(m);
@@ -397,8 +377,6 @@ public class ConcreteClass{
 
         codeGenerator.gen(".DATA");
         codeGenerator.gen(instruction);
-        System.out.println("--- Generating VTable for class " + name.getLexeme() + " with tag " + tag);
-        System.out.println("VTable: " + instruction + "\n");
     }
 
     private void generateAttr(CodeGenerator codeGenerator) throws CompiException {
@@ -406,7 +384,6 @@ public class ConcreteClass{
 
         for(ConcreteAttribute attribute : attributes.values()) {
             if(attribute.isStatic().getName().equals("keyword_static")) {
-                System.out.println(" ======= AGREGUE ATRIBUTO ESTATICO " + attribute.getName().getLexeme() + " EN LA CLASE " + name.getLexeme());
                 staticAttributes.add(attribute);
             }
         }
@@ -419,7 +396,6 @@ public class ConcreteClass{
             if (attribute.getOriginalClass() == this){
                 String tag = TagHandler.getAttributeTag(attribute,this);
                 String instruction = tag + ": DW 0";
-                System.out.println("--- Generating attribute " + attribute.getName().getLexeme() + " in the class " + name.getLexeme() + " with tag " + tag);
                 codeGenerator.gen(instruction);
             }
         }
@@ -452,8 +428,6 @@ public class ConcreteClass{
             ConcreteClass implementedInterface = symbolTable.interfaces.get(implementsName.getLexeme());
             nextOffset = implementedInterface.getNextMethodOffset();
         }
-        System.out.println(" (((((((( INITIAL OFFSET FOR INTERFACE " + name.getLexeme() + " IS " + nextOffset + " ))))))))");
-
         for (ConcreteMethod m : methods.values()){
             boolean isRedefined = m.isRedefined();
             boolean isInherited = m.originalClass != this;
@@ -466,21 +440,5 @@ public class ConcreteClass{
         }
 
         nextMethodOffset = nextOffset;
-    }
-}
-
-interface A {
-    int a1();
-}
-
-class AImpl implements A {
-    public int a1() {
-        return 10;
-    }
-}
-
-class BImpl implements A {
-    public int a1() {
-        return 20;
     }
 }

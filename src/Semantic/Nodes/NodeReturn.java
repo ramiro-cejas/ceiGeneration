@@ -98,10 +98,6 @@ public class NodeReturn implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating return");
-        //TODO
-        // si tengo retorno void o es un constructor entonces solo hago salida
-        // sino hago retorno y luego salida
         if (parentBlock.currentMethod.type.getName().equals("keyword_void") || parentBlock.currentMethod == parentBlock.currentClass.constructor){
             generateExit(codeGenerator);
         } else {

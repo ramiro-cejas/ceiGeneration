@@ -71,8 +71,6 @@ public class ConcreteMethod {
         // assign offsets to the parameters
         int staticBonus = isStatic.getName().equals("keyword_static") ? 0 : 1;
         int numberOfParameters = parametersInOrder.size();
-        System.out.println(" ############ Parametros en orden del metodo " + name.getLexeme() + " de la clase " + originalClass.name.getLexeme() + " ############");
-        System.out.println(" ############ " + parametersInOrder.size() + " ############ ");
         int minOffset = 3 + staticBonus;
         for(int i = 1; i <= numberOfParameters; i++) {
             int offset = numberOfParameters - i + minOffset;
@@ -102,8 +100,6 @@ public class ConcreteMethod {
     private void generate(CodeGenerator codeGenerator, String tag) throws CompiException {
         codeGenerator.gen("");
         codeGenerator.gen(".CODE");
-
-        System.out.println("Generating method " + name.getLexeme() +" in the class " + methodBlock.currentClass.name.getLexeme() + " with tag " + tag);
 
         String c1 = " # We store the dynamic link";
         codeGenerator.gen(tag + ": LOADFP" + c1);

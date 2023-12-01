@@ -186,14 +186,11 @@ public class NodeVariable implements Node{
         if (isMethod){
             //si el metodo referenciado es estatico
             if(methodToCall.isStatic.getLexeme().equals("static")) {
-                //System.out.println("Generating static method access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme() + " in the line " + name.getRow());
                 generateStaticCall(codeGenerator);
             } else {
-                //System.out.println("Generating non static method access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme() + " in the line " + name.getRow());
                 generateDynamicCall(codeGenerator);
             }
         } else {
-            //System.out.println("Generating attribute access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme() + " in the line " + name.getRow());
             if(referencedVariable.isStatic.getName().equals("keyword_static")) {
                 generateStaticAttr(codeGenerator);
             } else {
@@ -212,8 +209,6 @@ public class NodeVariable implements Node{
 
     @Override
     public int getOffset() {
-        //System.out.println("GETTING OFFSET OF " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme() + " in the line " + name.getRow());
-        //TODO check if this is correct
         if (childChain != null){
             return childChain.getOffset();
         } else if (isMethod){
@@ -232,7 +227,6 @@ public class NodeVariable implements Node{
     }
 
     protected void generateStaticAttr(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating static attribute access " + name.getLexeme() + ", with type " + referencedVariable.variableType);
         boolean readAccess = !isInLeftSideOfAssign || childChain != null;
         ConcreteAttribute attribute = referencedVariable;
 
@@ -260,10 +254,8 @@ public class NodeVariable implements Node{
     }
 
     protected void generateDynamicAttr(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating dynamic attribute access " + name.getLexeme() + ", with type " + referencedVariable.variableType);
         //if the referenced variable is a class attribute
         boolean attribute = referencedVariable.variableType == ConcreteAttribute.ATTRIBUTE;
-        //System.out.println(" ////////// IS IN LEFT SIDE OF ASSIGN: " + isInLeftSideOfAssign);
         boolean readAccess = !isInLeftSideOfAssign || childChain != null;
         int offset = referencedVariable.getOffset();
         //boolean isParameter = parentBlock.methodParameters.contains(referencedVariable);
@@ -287,7 +279,6 @@ public class NodeVariable implements Node{
             }
         } else {
             if(readAccess) {
-                //System.out.println("Generating read acces to local variable or parameter " + name.getLexeme() + " is " + referencedVariable.variableType + " with type " + type.getLexeme());
                 String cLoad = " # We get the variable "+ referencedVariable.getName().getLexeme() +" is " + referencedVariable.variableType + " from the stack through its offset";
                 codeGenerator.gen("LOAD " + offset + cLoad);
             } else {
@@ -300,7 +291,6 @@ public class NodeVariable implements Node{
     }
 
     private void generateStaticCall(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating static method access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
         if (parentChain != null) {
             String cPop = " # We consume the 'this' reference from the 'chainee' that's on top of the stack, since we won't use it";
             codeGenerator.gen("POP" + cPop);
@@ -324,7 +314,6 @@ public class NodeVariable implements Node{
     }
 
     private void generateDynamicCall(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating dynamic method access " + name.getLexeme() + " in the class " + parentBlock.currentClass.name.getLexeme() + " with type " + type.getLexeme());
         if (parentChain == null) {
             codeGenerator.gen("LOAD 3 # We load the 'this' reference");
         }

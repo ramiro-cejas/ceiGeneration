@@ -108,7 +108,6 @@ public class NodeBlock implements Node {
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
         assignOffsets();
-        //System.out.println("Generating block");
         int localVarCount = localVariables.size();
 
         if (localVarCount > 0) {
@@ -134,26 +133,18 @@ public class NodeBlock implements Node {
             String cFree = " # Freeing space reserved for block local vars";
             codeGenerator.gen("FMEM " + localVarCount + cFree);
         }
-
-        ////System.out.println(" ||||||||||| PRINTING ALL THE BLOCK VARIABLES |||||||||||");
-        for (ConcreteAttribute variable : localVariables) {
-            ////System.out.println(" ||||||||||| " + variable.getName().getLexeme() + " whit offset "+ variable.getOffset() + " |||||||||||");
-        }
     }
 
     @Override
     public void assignOffsets() {
         if (alreadyAssigned)
             return;
-        ////System.out.println(" %%%% Assigning offsets of "+ localVariables.size() +" localVars to block of the method " + currentMethod.name.getLexeme() + " of the class " + currentClass.name.getLexeme() + " %%%%");
         if(parentBlock != null) {
             //parentBlock.assignOffsets();
             offset = parentBlock.getOffset();
-            ////System.out.println("/////Offset of parent block is " + offset);
         }
 
         for(ConcreteAttribute variable : localVariables) {
-            System.out.println("///// AAAAAAAA Offset of " + variable.getName().getLexeme() + " is " + offset);
             variable.setOffset(offset);
             offset--;
         }

@@ -51,7 +51,6 @@ public class NodeWhile implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        System.out.println("Generating while");
 
         int id = TagHandler.getSentenceID();
         String tagIn = "while_" + id;

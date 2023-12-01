@@ -39,7 +39,6 @@ public class NodeVariableThis extends NodeVariable{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        //System.out.println("Generating this");
         String c = " # Ref to 'this'";
         codeGenerator.gen("LOAD 3" + c);
 

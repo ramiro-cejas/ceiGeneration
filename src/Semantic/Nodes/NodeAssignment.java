@@ -25,7 +25,6 @@ public class NodeAssignment implements Node{
 
     @Override
     public void check(SymbolTable symbolTable) throws SemanticException {
-        //System.out.println("Checking assignment");
         if (!alreadyChecked){
             leftExpression.check(symbolTable);
             rightExpression.check(symbolTable);
@@ -80,7 +79,6 @@ public class NodeAssignment implements Node{
 
     @Override
     public void generate(CodeGenerator codeGenerator) throws CompiException {
-        //System.out.println("Generating assignment");
         rightExpression.generate(codeGenerator);
         codeGenerator.gen("DUP # duplicating the value to be assigned");
         leftExpression.generate(codeGenerator);
