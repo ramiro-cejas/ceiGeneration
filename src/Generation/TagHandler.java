@@ -17,7 +17,6 @@ public class TagHandler {
     }
 
     public static String getConstructorTag(ConcreteMethod c) {
-        System.out.println(c.name.getLexeme());
         String c_class = c.methodBlock.currentClass.name.getLexeme();
         return ("Constructor@" + c_class);
     }
